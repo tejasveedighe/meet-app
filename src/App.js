@@ -1,20 +1,38 @@
 import { MeetingProvider } from "@videosdk.live/react-sdk";
-import React from "react";
+import React, { useState } from "react";
 import MeetingView from "./components/Meeting/MeetingView";
+import { authToken, createMeeting } from "./api";
+import JoinScreen from "./components/JoinScreen/Join";
 
 const App = () => {
-	return (
+	const [meetingId, setMeetingId] = useState(null);
+
+	// get the metting id from the api
+	const getMeetingAndToken = async (id) => {
+		const meetingId =
+			id === null ? await createMeeting({ token: authToken }) : id;
+
+		setMeetingId(meetingId);
+	};
+
+	const onMeetingLeave = () => {
+		setMeetingId(null);
+	};
+
+	return authToken && meetingId ? (
 		<MeetingProvider
 			config={{
-				meetingId: "5x30-oepe-561b",
+				meetingId,
 				micEnabled: true,
 				webcamEnabled: true,
-				name: "Tejasvee's Org",
+				name: "Tejasvee",
 			}}
-			token={process.env.REACT_APP_VIDEO_SDK_TOKEN}
+			token={authToken}
 		>
-			<MeetingView />
+			<MeetingView meetingId={meetingId} onMeetingLeave={onMeetingLeave} />
 		</MeetingProvider>
+	) : (
+		<JoinScreen getMeetingAndToken={getMeetingAndToken} />
 	);
 };
 
