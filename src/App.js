@@ -1,25 +1,21 @@
-import logo from './logo.svg';
-import './App.css';
+import { MeetingProvider } from "@videosdk.live/react-sdk";
+import React from "react";
+import MeetingView from "./components/Meeting/MeetingView";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+const App = () => {
+	return (
+		<MeetingProvider
+			config={{
+				meetingId: "5x30-oepe-561b",
+				micEnabled: true,
+				webcamEnabled: true,
+				name: "Tejasvee's Org",
+			}}
+			token={process.env.REACT_APP_VIDEO_SDK_TOKEN}
+		>
+			<MeetingView />
+		</MeetingProvider>
+	);
+};
 
 export default App;
