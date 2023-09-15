@@ -1,9 +1,9 @@
 import { useParticipant } from "@videosdk.live/react-sdk";
 import React, { useEffect, useMemo, useRef } from "react";
 import ReactPlayer from "react-player";
-
 import styles from "./Participant.module.css";
 import MicIcons from "./components/MicIcons/MicIcons";
+import NoCamScreen from "./components/NoCamScreen/NoCamScreen";
 
 export default function ParticipantView(props) {
 	const micRef = useRef(null);
@@ -55,21 +55,7 @@ export default function ParticipantView(props) {
 					}}
 				/>
 			) : (
-				<div
-					style={{
-						width: "300px",
-						height: "200px",
-						border: "1px solid black",
-						background: "black",
-						color: "white",
-						display: "flex",
-						justifyContent: "center",
-						alignItems: "center",
-						borderRadius: "5px",
-					}}
-				>
-					{displayName}
-				</div>
+				<NoCamScreen displayName={displayName} />
 			)}
 			<MicIcons webcamOn={webcamOn} micOn={micOn} />
 		</div>
