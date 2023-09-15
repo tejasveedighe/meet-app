@@ -1,12 +1,17 @@
-import { useMeeting, useParticipant } from "@videosdk.live/react-sdk";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useParticipant } from "@videosdk.live/react-sdk";
+import React, { useEffect, useMemo, useRef } from "react";
 import ReactPlayer from "react-player";
+import MicOnBlack from "./assets/microphone-svgrepo-com.svg";
+import MicOnWhite from "./assets/microphone-svgrepo-com (2).svg";
+import MicOffWhite from "./assets/microphone-mute-record-song-sound-voice-svgrepo-com (1).svg";
+import MicOffBlack from "./assets/microphone-mute-record-song-sound-voice-svgrepo-com.svg";
+import styles from "./Participant.module.css";
 
 export default function ParticipantView(props) {
-	const [cam, setCam] = useState(false);
 	const micRef = useRef(null);
 	const { webcamStream, micStream, webcamOn, micOn, isLocal, displayName } =
 		useParticipant(props.participantId);
+
 	const videoStream = useMemo(() => {
 		if (webcamOn && webcamStream) {
 			const mediaStream = new MediaStream();
@@ -15,7 +20,6 @@ export default function ParticipantView(props) {
 		}
 	}, [webcamStream, webcamOn]);
 
-	const { toggleWebcam } = useMeeting();
 	useEffect(() => {
 		if (micRef.current) {
 			if (micOn && micStream) {
@@ -34,12 +38,8 @@ export default function ParticipantView(props) {
 		}
 	}, [micOn, micStream]);
 
-	function handleWebCam() {
-		toggleWebcam();
-		setCam((prev) => !prev);
-	}
 	return (
-		<div>
+		<div className={styles.parent}>
 			<audio ref={micRef} autoPlay playsInline muted={isLocal} />
 			{webcamOn ? (
 				<ReactPlayer
@@ -67,14 +67,25 @@ export default function ParticipantView(props) {
 						display: "flex",
 						justifyContent: "center",
 						alignItems: "center",
+						borderRadius: "5px",
 					}}
 				>
-					Tejasvee
+					{displayName}
 				</div>
 			)}
-			<button onClick={handleWebCam}>
-				{cam ? "Enable" : "Disable"} Web Cam
-			</button>
+			{micOn ? (
+				<img
+					src={webcamOn ? MicOnBlack : MicOnWhite}
+					alt="Mic On"
+					className={styles.mic}
+				/>
+			) : (
+				<img
+					src={webcamOn ? MicOffBlack : MicOffWhite}
+					alt="Mic Off"
+					className={styles.mic}
+				/>
+			)}
 		</div>
 	);
 }
