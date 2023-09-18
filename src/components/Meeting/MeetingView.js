@@ -4,7 +4,6 @@ import { Col, Row } from "react-simple-flex-grid";
 import "react-simple-flex-grid/lib/main.css";
 import Controls from "../Controls/Controls";
 import ParticipantView from "../Participant/Participant";
-import styles from "./MeetingView.module.css";
 
 const chunk = (arr) => {
 	const newArr = [];

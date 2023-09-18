@@ -1,0 +1,32 @@
+.parent {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	margin-top: 250px;
+	gap: 10px;
+}
+
+.meetingIdInput {
+	width: 200px;
+	padding: 15px;
+	border-radius: 5px;
+    font-size: 15px;
+}
+
+.buttonsRow {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+}
+
+.button {
+	padding: 10px;
+	border: 0px;
+	border-radius: 5px;
+	background: #0d6efd;
+	color: white;
+	cursor: pointer;
+	font-size: 15px;
+}

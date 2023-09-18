@@ -1,3 +1,4 @@
+import styles from "./Join.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { getMeetingAndToken, setMeetingId } from "../../redux/meetingSlice";
 
@@ -8,17 +9,24 @@ export default function JoinScreen() {
 		await dispatch(getMeetingAndToken(meetingId));
 	};
 	return (
-		<div>
+		<div className={styles.parent}>
 			<input
+				className={styles.meetingIdInput}
 				type="text"
 				placeholder="Enter Meeting Id"
 				onChange={(e) => {
 					dispatch(setMeetingId(e.target.value));
 				}}
 			/>
-			<button onClick={onClick}>Join</button>
-			{" or "}
-			<button onClick={onClick}>Create Meeting</button>
+			<div className={styles.buttonsRow}>
+				<button className={styles.button} onClick={onClick}>
+					Join
+				</button>
+				OR
+				<button className={styles.button} onClick={onClick}>
+					Create Meeting
+				</button>
+			</div>
 		</div>
 	);
 }

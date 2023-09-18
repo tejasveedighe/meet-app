@@ -44,7 +44,10 @@ export default function Controls() {
 				)}
 			</button>
 			<button
-				className={classNames(styles.button, styles.redIcon)}
+				className={classNames(
+					styles.button,
+					localScreenShareOn ? styles.redIcon : ""
+				)}
 				onClick={() => toggleScreenShare()}
 			>
 				{localScreenShareOn ? (
