@@ -7,8 +7,26 @@ import NoCamScreen from "./components/NoCamScreen/NoCamScreen";
 
 export default function ParticipantView(props) {
 	const micRef = useRef(null);
-	const { webcamStream, micStream, webcamOn, micOn, isLocal, displayName } =
-		useParticipant(props.participantId);
+	const {
+		webcamStream,
+		micStream,
+		webcamOn,
+		micOn,
+		isLocal,
+		displayName,
+		screenShareOn,
+		screenShareStream,
+	} = useParticipant(props.participantId);
+	console.log(
+		webcamStream,
+		micStream,
+		webcamOn,
+		micOn,
+		isLocal,
+		displayName,
+		screenShareOn,
+		screenShareStream
+	);
 
 	const videoStream = useMemo(() => {
 		if (webcamOn && webcamStream) {
@@ -16,7 +34,15 @@ export default function ParticipantView(props) {
 			mediaStream.addTrack(webcamStream.track);
 			return mediaStream;
 		}
-	}, [webcamStream, webcamOn]);
+	}, [webcamOn, webcamStream]);
+
+	const mediaStream = useMemo(() => {
+		if (screenShareOn && screenShareStream) {
+			const mediaStream = new MediaStream();
+			mediaStream.addTrack(screenShareStream.track);
+			return mediaStream;
+		}
+	}, [screenShareStream, screenShareOn]);
 
 	useEffect(() => {
 		if (micRef.current) {
@@ -58,6 +84,22 @@ export default function ParticipantView(props) {
 				<NoCamScreen displayName={displayName} />
 			)}
 			<MicIcons webcamOn={webcamOn} micOn={micOn} />
+			{screenShareOn ? (
+				<ReactPlayer
+					playsinline // very very imp prop
+					pip={false}
+					light={false}
+					controls={false}
+					muted={true}
+					playing={true}
+					url={mediaStream}
+					height={"200px"}
+					width={"300px"}
+					onError={(err) => {
+						console.log(err, "participant video error");
+					}}
+				/>
+			) : null}
 		</div>
 	);
 }
