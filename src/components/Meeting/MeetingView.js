@@ -1,7 +1,16 @@
 import { useMeeting } from "@videosdk.live/react-sdk";
 import React, { useState } from "react";
-import ParticipantView from "../Participant/Participant";
+import { Col, Row } from "react-simple-flex-grid";
+import "react-simple-flex-grid/lib/main.css";
 import Controls from "../Controls/Controls";
+import ParticipantView from "../Participant/Participant";
+import styles from "./MeetingView.module.css";
+
+const chunk = (arr) => {
+	const newArr = [];
+	while (arr.length) newArr.push(arr.splice(0, 3));
+	return newArr;
+};
 
 function MeetingView(props) {
 	const [joined, setJoined] = useState(null);
@@ -15,16 +24,29 @@ function MeetingView(props) {
 		join();
 	};
 	return (
-		<div className="container">
+		<div>
 			<h3>Meeting ID: {props.meetingId}</h3>
 			{joined && joined === "JOINED" ? (
 				<div>
 					<Controls />
-					{[...participants.keys()].map((participantId) => (
-						<ParticipantView
-							participantId={participantId}
-							key={participantId}
-						/>
+					{chunk([...participants.keys()]).map((participants) => (
+						<Row
+							key={participants}
+							gutter={80}
+							align="top"
+							justify="space-between"
+						>
+							{participants.map((participantId) => {
+								return (
+									<Col span={4}>
+										<ParticipantView
+											participantId={participantId}
+											key={participantId}
+										/>
+									</Col>
+								);
+							})}
+						</Row>
 					))}
 				</div>
 			) : joined && joined === "JOINING" ? (
