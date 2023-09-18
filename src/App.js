@@ -1,22 +1,17 @@
 import { MeetingProvider } from "@videosdk.live/react-sdk";
-import React, { useState } from "react";
-import MeetingView from "./components/Meeting/MeetingView";
-import { authToken, createMeeting } from "./api";
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { authToken } from "./api";
 import JoinScreen from "./components/JoinScreen/Join";
+import MeetingView from "./components/Meeting/MeetingView";
+import { setMeetingId } from "./redux/meetingSlice";
 
 const App = () => {
-	const [meetingId, setMeetingId] = useState(null);
-
-	// get the metting id from the api
-	const getMeetingAndToken = async (id) => {
-		const meetingId =
-			id === null ? await createMeeting({ token: authToken }) : id;
-
-		setMeetingId(meetingId);
-	};
+	const dispatch = useDispatch();
+	const { meetingId } = useSelector((state) => state.meeting);
 
 	const onMeetingLeave = () => {
-		setMeetingId(null);
+		dispatch(setMeetingId(null));
 	};
 
 	return authToken && meetingId ? (
@@ -32,7 +27,7 @@ const App = () => {
 			<MeetingView meetingId={meetingId} onMeetingLeave={onMeetingLeave} />
 		</MeetingProvider>
 	) : (
-		<JoinScreen getMeetingAndToken={getMeetingAndToken} />
+		<JoinScreen />
 	);
 };
 

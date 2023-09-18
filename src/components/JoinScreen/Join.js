@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getMeetingAndToken, setMeetingId } from "../../redux/meetingSlice";
 
-export default function JoinScreen({ getMeetingAndToken }) {
-	const [meetingId, setMeetingId] = useState(null);
+export default function JoinScreen() {
+	const { meetingId } = useSelector((state) => state.meeting);
+	const dispatch = useDispatch();
 	const onClick = async () => {
-		await getMeetingAndToken(meetingId);
+		await dispatch(getMeetingAndToken(meetingId));
 	};
 	return (
 		<div>
@@ -11,7 +13,7 @@ export default function JoinScreen({ getMeetingAndToken }) {
 				type="text"
 				placeholder="Enter Meeting Id"
 				onChange={(e) => {
-					setMeetingId(e.target.value);
+					dispatch(setMeetingId(e.target.value));
 				}}
 			/>
 			<button onClick={onClick}>Join</button>
