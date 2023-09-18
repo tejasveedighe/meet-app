@@ -24,11 +24,10 @@ function MeetingView(props) {
 		join();
 	};
 	return (
-		<div className={styles.parent}>
+		<div>
 			<h3>Meeting ID: {props.meetingId}</h3>
 			{joined && joined === "JOINED" ? (
-				<div>
-					<Controls />
+				<div className={styles.parent}>
 					{chunk([...participants.keys()]).map((participants) => (
 						<Row
 							key={participants}
@@ -48,6 +47,7 @@ function MeetingView(props) {
 							})}
 						</Row>
 					))}
+					<Controls />
 				</div>
 			) : joined && joined === "JOINING" ? (
 				<p>Joining the meeting...</p>
