@@ -16,8 +16,9 @@ export default function ParticipantView(props) {
 		displayName,
 		screenShareOn,
 		screenShareStream,
+		screenShareAudioStream,
 	} = useParticipant(props.participantId);
-
+	const audioPlayer = useRef();
 
 	const videoStream = useMemo(() => {
 		if (webcamOn && webcamStream) {
@@ -53,6 +54,30 @@ export default function ParticipantView(props) {
 		}
 	}, [micOn, micStream]);
 
+	useEffect(() => {
+		if (
+			!isLocal &&
+			audioPlayer.current &&
+			screenShareOn &&
+			screenShareAudioStream
+		) {
+			const mediaStream = new MediaStream();
+			mediaStream.addTrack(screenShareAudioStream.track);
+
+			audioPlayer.current.srcObject = mediaStream;
+			audioPlayer.current.play().catch((err) => {
+				if (
+					err.message ===
+					"play() failed because the user didn't interact with the document first. https://goo.gl/xX8pDD"
+				) {
+					console.error("audio" + err.message);
+				}
+			});
+		} else {
+			audioPlayer.current.srcObject = null;
+		}
+	}, [screenShareAudioStream, screenShareOn, isLocal]);
+
 	return (
 		<div className={styles.parent}>
 			<audio ref={micRef} autoPlay playsInline muted={isLocal} />
@@ -75,6 +100,7 @@ export default function ParticipantView(props) {
 				<NoCamScreen displayName={displayName} />
 			)}
 			<MicIcons webcamOn={webcamOn} micOn={micOn} />
+			<audio ref={audioPlayer} autoPlay playsInline controls={false} />
 			{screenShareOn ? (
 				<ReactPlayer
 					playsinline // very very imp prop
@@ -84,10 +110,10 @@ export default function ParticipantView(props) {
 					muted={true}
 					playing={true}
 					url={mediaStream}
-					height={"200px"}
-					width={"300px"}
+					height={"100%"}
+					width={"100%"}
 					onError={(err) => {
-						console.log(err, "participant video error");
+						alert(err, "participant video error");
 					}}
 				/>
 			) : null}

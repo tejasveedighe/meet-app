@@ -43,11 +43,14 @@ export default function Controls() {
 					<BsCameraVideoOff className={styles.icon} />
 				)}
 			</button>
-			<button className={styles.button} onClick={() => toggleScreenShare()}>
+			<button
+				className={classNames(styles.button, styles.redIcon)}
+				onClick={() => toggleScreenShare()}
+			>
 				{localScreenShareOn ? (
-					<LuScreenShare className={styles.icon} />
-				) : (
 					<LuScreenShareOff className={styles.icon} />
+				) : (
+					<LuScreenShare className={styles.icon} />
 				)}
 			</button>
 		</div>
