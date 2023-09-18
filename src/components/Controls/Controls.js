@@ -1,15 +1,55 @@
 import { useMeeting } from "@videosdk.live/react-sdk";
 import React from "react";
+import {
+	BsCameraVideo,
+	BsCameraVideoOff,
+	BsMic,
+	BsMicMute,
+} from "react-icons/bs";
+import { LuScreenShareOff, LuScreenShare } from "react-icons/lu";
+import { PiPhoneDisconnectBold } from "react-icons/pi";
 import styles from "./Controls.module.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import classNames from "classnames";
+
 export default function Controls() {
-	const { leave, toggleMic, toggleWebcam, toggleScreenShare } = useMeeting();
+	const {
+		leave,
+		toggleMic,
+		toggleWebcam,
+		toggleScreenShare,
+		localMicOn,
+		localWebcamOn,
+		localScreenShareOn,
+	} = useMeeting();
 	return (
 		<div className={styles.parent}>
-			<button onClick={() => leave()}>Leave</button>
-			<button onClick={() => toggleMic()}>toggleMic</button>
-			<button onClick={() => toggleWebcam()}>toggleWebcam</button>
-			<button onClick={() => toggleScreenShare()}>toggleScreenShare</button>
+			<button
+				className={classNames(styles.button, styles.redIcon)}
+				onClick={() => leave()}
+			>
+				<PiPhoneDisconnectBold className={styles.icon} />
+			</button>
+			<button className={styles.button} onClick={() => toggleMic()}>
+				{localMicOn ? (
+					<BsMic className={styles.icon} />
+				) : (
+					<BsMicMute className={styles.icon} />
+				)}
+			</button>
+			<button className={styles.button} onClick={() => toggleWebcam()}>
+				{localWebcamOn ? (
+					<BsCameraVideo className={styles.icon} />
+				) : (
+					<BsCameraVideoOff className={styles.icon} />
+				)}
+			</button>
+			<button className={styles.button} onClick={() => toggleScreenShare()}>
+				{localScreenShareOn ? (
+					<LuScreenShare className={styles.icon} />
+				) : (
+					<LuScreenShareOff className={styles.icon} />
+				)}
+			</button>
 		</div>
 	);
 }

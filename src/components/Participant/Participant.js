@@ -17,16 +17,7 @@ export default function ParticipantView(props) {
 		screenShareOn,
 		screenShareStream,
 	} = useParticipant(props.participantId);
-	console.log(
-		webcamStream,
-		micStream,
-		webcamOn,
-		micOn,
-		isLocal,
-		displayName,
-		screenShareOn,
-		screenShareStream
-	);
+
 
 	const videoStream = useMemo(() => {
 		if (webcamOn && webcamStream) {
