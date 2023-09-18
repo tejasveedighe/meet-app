@@ -4,6 +4,7 @@ import { Col, Row } from "react-simple-flex-grid";
 import "react-simple-flex-grid/lib/main.css";
 import Controls from "../Controls/Controls";
 import ParticipantView from "../Participant/Participant";
+import styles from "./MeetingView.module.css";
 
 const chunk = (arr) => {
 	const newArr = [];
@@ -51,7 +52,9 @@ function MeetingView(props) {
 			) : joined && joined === "JOINING" ? (
 				<p>Joining the meeting...</p>
 			) : (
-				<button onClick={joinMeeting}>Join</button>
+				<button className={styles.button} onClick={joinMeeting}>
+					Join
+				</button>
 			)}
 		</div>
 	);
