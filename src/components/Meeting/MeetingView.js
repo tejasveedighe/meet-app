@@ -24,7 +24,7 @@ function MeetingView(props) {
 		join();
 	};
 	return (
-		<div>
+		<div className={styles.parent}>
 			<h3>Meeting ID: {props.meetingId}</h3>
 			{joined && joined === "JOINED" ? (
 				<div>
