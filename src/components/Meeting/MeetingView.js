@@ -23,21 +23,17 @@ function MeetingView(props) {
 		setJoined("JOINING");
 		join();
 	};
+	const { presenterId } = useMeeting();
 	return (
 		<div>
 			<h3>Meeting ID: {props.meetingId}</h3>
 			{joined && joined === "JOINED" ? (
 				<div className={styles.parent}>
 					{chunk([...participants.keys()]).map((participants) => (
-						<Row
-							key={participants}
-							gutter={80}
-							align="top"
-							justify="space-between"
-						>
+						<Row key={participants} align="center" justify="center">
 							{participants.map((participantId) => {
 								return (
-									<Col span={4}>
+									<Col span={participantId === presenterId ? 50 : 4}>
 										<ParticipantView
 											participantId={participantId}
 											key={participantId}

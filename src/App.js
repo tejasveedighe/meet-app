@@ -18,8 +18,8 @@ const App = () => {
 		<MeetingProvider
 			config={{
 				meetingId,
-				micEnabled: true,
-				webcamEnabled: true,
+				micEnabled: false,
+				webcamEnabled: false,
 				name: "Tejasvee",
 			}}
 			token={authToken}
