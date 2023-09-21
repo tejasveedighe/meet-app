@@ -5,11 +5,34 @@ import "react-simple-flex-grid/lib/main.css";
 import Controls from "../Controls/Controls";
 import ParticipantView from "../Participant/Participant";
 import styles from "./MeetingView.module.css";
+import ScreenShare from "../ScreenShare/ScreenShare";
 
 const chunk = (arr) => {
 	const newArr = [];
 	while (arr.length) newArr.push(arr.splice(0, 3));
 	return newArr;
+};
+
+const RenderParticpants = ({ participants }) => {
+	const gridParticipants = chunk([...participants.keys()]);
+	return (
+		<>
+			{gridParticipants.map((participants) => (
+				<Row key={participants} align="center" justify="center">
+					{participants.map((participantId) => {
+						return (
+							<Col key={participantId} span={4}>
+								<ParticipantView
+									participantId={participantId}
+									key={participantId}
+								/>
+							</Col>
+						);
+					})}
+				</Row>
+			))}
+		</>
+	);
 };
 
 function MeetingView(props) {
@@ -29,20 +52,8 @@ function MeetingView(props) {
 			<h3>Meeting ID: {props.meetingId}</h3>
 			{joined && joined === "JOINED" ? (
 				<div className={styles.parent}>
-					{chunk([...participants.keys()]).map((participants) => (
-						<Row key={participants} align="center" justify="center">
-							{participants.map((participantId) => {
-								return (
-									<Col span={participantId === presenterId ? 50 : 4}>
-										<ParticipantView
-											participantId={participantId}
-											key={participantId}
-										/>
-									</Col>
-								);
-							})}
-						</Row>
-					))}
+					<ScreenShare participantId={presenterId} />
+					<RenderParticpants participants={participants} />
 					<Controls />
 				</div>
 			) : joined && joined === "JOINING" ? (
