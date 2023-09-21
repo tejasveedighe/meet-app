@@ -31,9 +31,11 @@ function MeetingView(props) {
 								presenterId={presenterId}
 							/>
 						</Col>
-						<Col order={1} span={9}>
-							<ScreenShare participantId={presenterId} />
-						</Col>
+						{presenterId ? (
+							<Col order={1} span={9}>
+								<ScreenShare participantId={presenterId} />
+							</Col>
+						) : null}
 					</Row>
 
 					<Controls />

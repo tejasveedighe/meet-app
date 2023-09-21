@@ -10,12 +10,7 @@ export default function RenderParticipants({ participants, presenterId }) {
 			{gridParticipants.map((participants) => {
 				if (!presenterId) {
 					return (
-						<Row
-							key={participants}
-							align="top"
-							justify="space-between"
-							gutter={40}
-						>
+						<Row key={participants} align="start" justify="center" gutter={40}>
 							{participants.map((participantId) => {
 								return (
 									<Col key={participantId}>
