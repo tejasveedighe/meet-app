@@ -5,6 +5,7 @@ import Controls from "../Controls/Controls";
 import RenderParticipants from "../RenderParticipants/RenderParticipants";
 import ScreenShare from "../ScreenShare/ScreenShare";
 import styles from "./MeetingView.module.css";
+import { Col, Row } from "react-simple-flex-grid";
 
 function MeetingView(props) {
 	const [joined, setJoined] = useState(null);
@@ -23,11 +24,18 @@ function MeetingView(props) {
 			<h3>Meeting ID: {props.meetingId}</h3>
 			{joined && joined === "JOINED" ? (
 				<div className={styles.parent}>
-					<ScreenShare participantId={presenterId} />
-					<RenderParticipants
-						participants={participants}
-						presenterId={presenterId}
-					/>
+					<Row justify="center">
+						<Col order={2}>
+							<RenderParticipants
+								participants={participants}
+								presenterId={presenterId}
+							/>
+						</Col>
+						<Col order={1} span={9}>
+							<ScreenShare participantId={presenterId} />
+						</Col>
+					</Row>
+
 					<Controls />
 				</div>
 			) : joined && joined === "JOINING" ? (

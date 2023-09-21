@@ -10,10 +10,15 @@ export default function RenderParticipants({ participants, presenterId }) {
 			{gridParticipants.map((participants) => {
 				if (!presenterId) {
 					return (
-						<Row key={participants} align="center" justify="center">
+						<Row
+							key={participants}
+							align="top"
+							justify="space-between"
+							gutter={40}
+						>
 							{participants.map((participantId) => {
 								return (
-									<Col key={participantId} span={4}>
+									<Col key={participantId}>
 										<ParticipantView
 											participantId={participantId}
 											key={participantId}
@@ -26,12 +31,12 @@ export default function RenderParticipants({ participants, presenterId }) {
 				} else {
 					return participants.map((participantId) => {
 						return (
-							<Col key={participantId} span={4}>
+							<Row key={participantId} gutter={4}>
 								<ParticipantView
 									participantId={participantId}
 									key={participantId}
 								/>
-							</Col>
+							</Row>
 						);
 					});
 				}

@@ -53,8 +53,8 @@ export default function ScreenShare(props) {
 					muted={true}
 					playing={true}
 					url={mediaStream}
-					height={"80%"}
-					width={"80%"}
+					height={"100%"}
+					width={"100%"}
 					onError={(err) => {
 						alert(err, "participant video error");
 					}}
