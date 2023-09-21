@@ -1,5 +1,5 @@
 import { useMeeting } from "@videosdk.live/react-sdk";
-import React from "react";
+import React, { useCallback } from "react";
 import {
 	BsCameraVideo,
 	BsCameraVideoOff,
@@ -10,6 +10,8 @@ import { LuScreenShareOff, LuScreenShare } from "react-icons/lu";
 import { PiPhoneDisconnectBold } from "react-icons/pi";
 import styles from "./Controls.module.css";
 import classNames from "classnames";
+import { useDispatch } from "react-redux";
+import { setMeetingId } from "../../redux/meetingSlice";
 
 export default function Controls() {
 	const {
@@ -21,11 +23,18 @@ export default function Controls() {
 		localWebcamOn,
 		localScreenShareOn,
 	} = useMeeting();
+
+	const dispatch = useDispatch();
+	const handleLeaveMeeting = useCallback(() => {
+		dispatch(setMeetingId(null));
+		leave();
+	}, [dispatch, leave]);
+
 	return (
 		<div className={styles.parent}>
 			<button
 				className={classNames(styles.button, styles.redIcon)}
-				onClick={() => leave()}
+				onClick={handleLeaveMeeting}
 			>
 				<PiPhoneDisconnectBold className={styles.icon} />
 			</button>
