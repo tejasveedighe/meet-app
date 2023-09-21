@@ -13,24 +13,43 @@ const chunk = (arr) => {
 	return newArr;
 };
 
-const RenderParticpants = ({ participants }) => {
+const RenderParticipants = ({ participants, presenterId }) => {
 	const gridParticipants = chunk([...participants.keys()]);
 	return (
 		<>
-			{gridParticipants.map((participants) => (
-				<Row key={participants} align="center" justify="center">
-					{participants.map((participantId) => {
-						return (
-							<Col key={participantId} span={4}>
-								<ParticipantView
-									participantId={participantId}
-									key={participantId}
-								/>
-							</Col>
-						);
-					})}
-				</Row>
-			))}
+			{gridParticipants.map((participants) => {
+				if (!presenterId) {
+					return (
+						<Row key={participants} align="center" justify="center">
+							{participants.map((participantId) => {
+								return (
+									<Col key={participantId} span={4}>
+										<ParticipantView
+											participantId={participantId}
+											key={participantId}
+										/>
+									</Col>
+								);
+							})}
+						</Row>
+					);
+				} else {
+					return (
+						<>
+							{participants.map((participantId) => {
+								return (
+									<Col key={participantId} span={4}>
+										<ParticipantView
+											participantId={participantId}
+											key={participantId}
+										/>
+									</Col>
+								);
+							})}
+						</>
+					);
+				}
+			})}
 		</>
 	);
 };
@@ -53,7 +72,10 @@ function MeetingView(props) {
 			{joined && joined === "JOINED" ? (
 				<div className={styles.parent}>
 					<ScreenShare participantId={presenterId} />
-					<RenderParticpants participants={participants} />
+					<RenderParticipants
+						participants={participants}
+						presenterId={presenterId}
+					/>
 					<Controls />
 				</div>
 			) : joined && joined === "JOINING" ? (
