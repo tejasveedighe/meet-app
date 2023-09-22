@@ -4,7 +4,6 @@ import ReactPlayer from "react-player";
 import styles from "./Participant.module.css";
 import MicIcons from "./components/MicIcons/MicIcons";
 import NoCamScreen from "./components/NoCamScreen/NoCamScreen";
-import ScreenShare from "../ScreenShare/ScreenShare";
 
 export default function ParticipantView(props) {
 	const micRef = useRef(null);

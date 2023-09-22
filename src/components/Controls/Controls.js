@@ -11,7 +11,7 @@ import { PiPhoneDisconnectBold } from "react-icons/pi";
 import styles from "./Controls.module.css";
 import classNames from "classnames";
 import { useDispatch } from "react-redux";
-import { setMeetingId } from "../../redux/meetingSlice";
+import { setMeetingId, setUsername } from "../../redux/meetingSlice";
 
 export default function Controls() {
 	const {
@@ -26,6 +26,7 @@ export default function Controls() {
 
 	const dispatch = useDispatch();
 	const handleLeaveMeeting = useCallback(() => {
+		dispatch(setUsername(null));
 		dispatch(setMeetingId(null));
 		leave();
 	}, [dispatch, leave]);

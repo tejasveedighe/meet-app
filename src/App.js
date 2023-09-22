@@ -4,27 +4,21 @@ import { useDispatch, useSelector } from "react-redux";
 import { authToken } from "./api";
 import JoinScreen from "./components/JoinScreen/Join";
 import MeetingView from "./components/Meeting/MeetingView";
-import { setMeetingId } from "./redux/meetingSlice";
 
 const App = () => {
-	const dispatch = useDispatch();
-	const { meetingId } = useSelector((state) => state.meeting);
+	const { meetingId, username } = useSelector((state) => state.meeting);
 
-	const onMeetingLeave = () => {
-		dispatch(setMeetingId(null));
-	};
-
-	return authToken && meetingId ? (
+	return authToken && meetingId && username ? (
 		<MeetingProvider
 			config={{
 				meetingId,
 				micEnabled: false,
 				webcamEnabled: false,
-				name: "Tejasvee",
+				name: username,
 			}}
 			token={authToken}
 		>
-			<MeetingView meetingId={meetingId} onMeetingLeave={onMeetingLeave} />
+			<MeetingView meetingId={meetingId} />
 		</MeetingProvider>
 	) : (
 		<JoinScreen />

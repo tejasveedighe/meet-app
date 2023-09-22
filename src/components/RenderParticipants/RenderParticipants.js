@@ -7,11 +7,16 @@ export default function RenderParticipants({ participants, presenterId }) {
 	const gridParticipants = chunk([...participants.keys()]);
 	return (
 		<>
-			{gridParticipants.map((participants) => {
+			{gridParticipants.map((participantsList) => {
 				if (!presenterId) {
 					return (
-						<Row key={participants} align="start" justify="center" gutter={40}>
-							{participants.map((participantId) => {
+						<Row
+							key={participantsList}
+							align="start"
+							justify="center"
+							gutter={40}
+						>
+							{participantsList.map((participantId) => {
 								return (
 									<Col key={participantId}>
 										<ParticipantView
@@ -24,7 +29,7 @@ export default function RenderParticipants({ participants, presenterId }) {
 						</Row>
 					);
 				} else {
-					return participants.map((participantId) => {
+					return participantsList.map((participantId) => {
 						return (
 							<Row key={participantId} gutter={4}>
 								<ParticipantView
