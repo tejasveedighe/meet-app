@@ -1,6 +1,6 @@
 import { MeetingProvider } from "@videosdk.live/react-sdk";
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { authToken } from "./api";
 import JoinScreen from "./components/JoinScreen/Join";
 import MeetingView from "./components/Meeting/MeetingView";

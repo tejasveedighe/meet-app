@@ -4,8 +4,13 @@ import ReactPlayer from "react-player";
 import styles from "./ScreenShare.module.css";
 
 export default function ScreenShare(props) {
-	const { isLocal, screenShareOn, screenShareStream, screenShareAudioStream } =
-		useParticipant(props.participantId);
+	const {
+		isLocal,
+		screenShareOn,
+		screenShareStream,
+		screenShareAudioStream,
+		participant,
+	} = useParticipant(props.participantId);
 
 	const audioPlayer = useRef();
 
@@ -40,7 +45,6 @@ export default function ScreenShare(props) {
 			audioPlayer.current.srcObject = null;
 		}
 	}, [screenShareAudioStream, screenShareOn, isLocal]);
-
 	return (
 		<div className={styles.parent}>
 			<audio ref={audioPlayer} autoPlay playsInline controls={false} />
@@ -60,6 +64,9 @@ export default function ScreenShare(props) {
 					}}
 				/>
 			) : null}
+			<div className={styles.participantName}>
+				{participant.displayName} is sharing screen
+			</div>
 		</div>
 	);
 }
