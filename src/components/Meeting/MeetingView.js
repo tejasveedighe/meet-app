@@ -1,31 +1,47 @@
 import { useMeeting } from "@videosdk.live/react-sdk";
-
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
+import { useDispatch } from "react-redux";
 import { Col, Row } from "react-simple-flex-grid";
 import "react-simple-flex-grid/lib/main.css";
+import { setMeetingId } from "../../redux/meetingSlice";
 import Controls from "../Controls/Controls";
 import RenderParticipants from "../RenderParticipants/RenderParticipants";
 import ScreenShare from "../ScreenShare/ScreenShare";
 import styles from "./MeetingView.module.css";
 
 function MeetingView(props) {
+	const dispatch = useDispatch();
 	const [joined, setJoined] = useState(null);
+
 	const { join, participants } = useMeeting({
 		onMeetingJoined: () => {
 			setJoined("JOINED");
 		},
-		onEntryRequested: (p) => {
-			if (window.confirm(`Entry requested by ${p.name}`)) {
-				p.allow();
+		onEntryRequested: (participant) => {
+			if (window.confirm(`Entry requested by ${participant.name}`)) {
+				participant.allow();
 			} else {
-				p.deny();
+				participant.deny();
+			}
+		},
+		onEntryResponded: (participantId, decision) => {
+			if (decision === "allowed") {
+				setJoined("JOINED");
+			} else if (!participants) {
+				setJoined("REJECTED");
 			}
 		},
 	});
+
 	const joinMeeting = () => {
 		setJoined("JOINING");
 		join();
 	};
+
+	const handleReset = useCallback(() => {
+		dispatch(setMeetingId(null));
+	}, [dispatch]);
+
 	const { presenterId } = useMeeting();
 	return (
 		<div>
@@ -50,6 +66,13 @@ function MeetingView(props) {
 				</div>
 			) : joined && joined === "JOINING" ? (
 				<p>Joining the meeting...</p>
+			) : joined && joined === "REJECTED" ? (
+				<>
+					<p>The Moderator has denied your entry! </p>
+					<button className={styles.button} onClick={handleReset}>
+						Home
+					</button>
+				</>
 			) : (
 				<button className={styles.button} onClick={joinMeeting}>
 					Join
