@@ -1,17 +1,25 @@
 import { useMeeting } from "@videosdk.live/react-sdk";
+
 import React, { useState } from "react";
+import { Col, Row } from "react-simple-flex-grid";
 import "react-simple-flex-grid/lib/main.css";
 import Controls from "../Controls/Controls";
 import RenderParticipants from "../RenderParticipants/RenderParticipants";
 import ScreenShare from "../ScreenShare/ScreenShare";
 import styles from "./MeetingView.module.css";
-import { Col, Row } from "react-simple-flex-grid";
 
 function MeetingView(props) {
 	const [joined, setJoined] = useState(null);
 	const { join, participants } = useMeeting({
 		onMeetingJoined: () => {
 			setJoined("JOINED");
+		},
+		onEntryRequested: (p) => {
+			if (window.confirm(`Entry requested by ${p.name}`)) {
+				p.allow();
+			} else {
+				p.deny();
+			}
 		},
 	});
 	const joinMeeting = () => {
