@@ -23,6 +23,7 @@ export const createMeeting = async ({ token }) => {
 	}
 };
 
+// get authToken for each user based on if creator of meeting or participant
 export const getAuthToken = async ({ mod }) => {
 	try {
 		const response = await axios.post(
