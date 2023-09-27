@@ -37,6 +37,7 @@ export default function JoinScreen() {
 					onChange={(e) => setUserName(e.currentTarget.value)}
 					required
 				/>
+				{!username && <span>Username is required!!</span>}
 				<input
 					className={styles.meetingIdInput}
 					type="text"
@@ -47,17 +48,21 @@ export default function JoinScreen() {
 				/>
 				<div className={styles.buttonsRow}>
 					<button
-						disabled={!meetId}
 						type="submit"
-						className={meetId ? styles.button : styles.disabledButton}
+						className={
+							!meetId || !username ? styles.disabledButton : styles.button
+						}
+						disabled={!meetId || !username}
 					>
 						Join
 					</button>
 					OR
 					<button
-						disabled={meetId}
-						className={meetId ? styles.disabledButton : styles.button}
+						className={
+							meetId || !username ? styles.disabledButton : styles.button
+						}
 						onClick={onCreateMeeting}
+						disabled={meetId || !username}
 					>
 						Create Meeting
 					</button>
