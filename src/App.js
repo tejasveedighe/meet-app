@@ -1,14 +1,13 @@
 import { MeetingProvider } from "@videosdk.live/react-sdk";
 import React from "react";
 import { useSelector } from "react-redux";
-import { authToken } from "./api";
 import JoinScreen from "./components/JoinScreen/Join";
 import MeetingView from "./components/Meeting/MeetingView";
 
 const App = () => {
-	const { meetingId, username } = useSelector((state) => state.meeting);
+	const { meetingId, username, token } = useSelector((state) => state.meeting);
 
-	return authToken && meetingId && username ? (
+	return token && meetingId && username ? (
 		<MeetingProvider
 			config={{
 				meetingId,
@@ -16,7 +15,7 @@ const App = () => {
 				webcamEnabled: false,
 				name: username,
 			}}
-			token={authToken}
+			token={token}
 		>
 			<MeetingView meetingId={meetingId} />
 		</MeetingProvider>

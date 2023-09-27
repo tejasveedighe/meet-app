@@ -1,7 +1,12 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { getMeetingAndToken, setUsername } from "../../redux/meetingSlice";
+import {
+	getMeetingAndToken,
+	setToken,
+	setUsername,
+} from "../../redux/meetingSlice";
 import styles from "./Join.module.css";
+import { getAuthToken } from "../../api";
 
 export default function JoinScreen() {
 	const [username, setUserName] = useState(null);
@@ -9,6 +14,9 @@ export default function JoinScreen() {
 	const dispatch = useDispatch();
 	const onClick = async (e) => {
 		e.preventDefault();
+		await getAuthToken({ mod: true }).then((authToken) =>
+			dispatch(setToken(authToken))
+		);
 		await dispatch(setUsername(username));
 		await dispatch(getMeetingAndToken(meetId));
 	};
@@ -32,7 +40,7 @@ export default function JoinScreen() {
 					}}
 				/>
 				<div className={styles.buttonsRow}>
-					<button type="submit" className={styles.button} onClick={onClick}>
+					<button type="submit" className={styles.button}>
 						Join
 					</button>
 					OR
