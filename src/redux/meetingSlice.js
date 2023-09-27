@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { authToken, createMeeting } from "../api";
+import { createMeeting, getAuthToken } from "../api";
 
 export const meetingSlice = createSlice({
 	name: "meeting",
@@ -26,6 +26,12 @@ export const getMeetingAndToken = (id) => async (dispatch, getState) => {
 	const meetingId = id === null ? await createMeeting({ token: token }) : id;
 
 	dispatch(setMeetingId(meetingId));
+};
+
+export const getToken = (mod) => async (dispatch) => {
+	await getAuthToken({ mod: mod }).then((authToken) =>
+		dispatch(setToken(authToken))
+	);
 };
 
 export const { setMeetingId, setUsername, setToken } = meetingSlice.actions;

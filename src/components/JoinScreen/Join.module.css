@@ -30,3 +30,13 @@
 	cursor: pointer;
 	font-size: 15px;
 }
+
+.disabledButton {
+	padding: 10px;
+	border: 0px;
+	border-radius: 5px;
+	color: white;
+	cursor: pointer;
+	font-size: 15px;
+	background: grey;
+}

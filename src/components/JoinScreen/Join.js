@@ -2,27 +2,33 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import {
 	getMeetingAndToken,
-	setToken,
+	getToken,
 	setUsername,
 } from "../../redux/meetingSlice";
 import styles from "./Join.module.css";
-import { getAuthToken } from "../../api";
 
 export default function JoinScreen() {
 	const [username, setUserName] = useState(null);
 	const [meetId, setMeetId] = useState(null);
+
 	const dispatch = useDispatch();
-	const onClick = async (e) => {
+
+	const onJoinMeeting = async (e) => {
 		e.preventDefault();
-		await getAuthToken({ mod: true }).then((authToken) =>
-			dispatch(setToken(authToken))
-		);
+		await dispatch(getToken(false));
+		await dispatch(setUsername(username));
+		await dispatch(getMeetingAndToken(meetId));
+	};
+
+	const onCreateMeeting = async (e) => {
+		e.preventDefault();
+		await dispatch(getToken(true));
 		await dispatch(setUsername(username));
 		await dispatch(getMeetingAndToken(meetId));
 	};
 
 	return (
-		<form onSubmit={onClick}>
+		<form onSubmit={onJoinMeeting}>
 			<div className={styles.parent}>
 				<input
 					className={styles.meetingIdInput}
@@ -40,11 +46,19 @@ export default function JoinScreen() {
 					}}
 				/>
 				<div className={styles.buttonsRow}>
-					<button type="submit" className={styles.button}>
+					<button
+						disabled={!meetId}
+						type="submit"
+						className={meetId ? styles.button : styles.disabledButton}
+					>
 						Join
 					</button>
 					OR
-					<button className={styles.button} onClick={onClick}>
+					<button
+						disabled={meetId}
+						className={meetId ? styles.disabledButton : styles.button}
+						onClick={onCreateMeeting}
+					>
 						Create Meeting
 					</button>
 				</div>
