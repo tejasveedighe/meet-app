@@ -8,6 +8,7 @@ import Controls from "../Controls/Controls";
 import RenderParticipants from "../RenderParticipants/RenderParticipants";
 import ScreenShare from "../ScreenShare/ScreenShare";
 import styles from "./MeetingView.module.css";
+import ParticipantsList from "../Participant/components/ParticipantsList/ParticipantsList";
 
 function MeetingView(props) {
 	const dispatch = useDispatch();
@@ -63,6 +64,10 @@ function MeetingView(props) {
 					</Row>
 
 					<Controls />
+					<ParticipantsList
+						list={participants}
+						presenting={presenterId ? true : false}
+					/>
 				</div>
 			) : joined && joined === "JOINING" ? (
 				<p>Joining the meeting...</p>

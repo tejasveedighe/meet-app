@@ -29,7 +29,7 @@ export default function RenderParticipants({ participants, presenterId }) {
 						</Row>
 					);
 				} else {
-					return participantsList.map((participantId) => {
+					return participantsList.slice(0, 2).map((participantId) => {
 						return (
 							<Row key={participantId} gutter={4}>
 								<ParticipantView
