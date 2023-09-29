@@ -1,4 +1,4 @@
-import { useParticipant } from "@videosdk.live/react-sdk";
+import { useMeeting, useParticipant } from "@videosdk.live/react-sdk";
 import React, { useEffect, useMemo, useRef } from "react";
 import ReactPlayer from "react-player";
 import styles from "./Participant.module.css";
@@ -7,6 +7,7 @@ import NoCamScreen from "./components/NoCamScreen/NoCamScreen";
 
 export default function ParticipantView(props) {
 	const micRef = useRef(null);
+
 	const { webcamStream, micStream, webcamOn, micOn, isLocal, displayName } =
 		useParticipant(props.participantId);
 
