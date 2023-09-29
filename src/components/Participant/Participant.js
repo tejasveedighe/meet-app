@@ -1,4 +1,4 @@
-import { useMeeting, useParticipant } from "@videosdk.live/react-sdk";
+import { useParticipant } from "@videosdk.live/react-sdk";
 import React, { useEffect, useMemo, useRef } from "react";
 import ReactPlayer from "react-player";
 import styles from "./Participant.module.css";
