@@ -7,6 +7,7 @@ export const meetingSlice = createSlice({
 		meetingId: null,
 		username: null,
 		token: null,
+		moderator: false,
 	},
 	reducers: {
 		setMeetingId: (state, action) => {
@@ -17,6 +18,9 @@ export const meetingSlice = createSlice({
 		},
 		setToken: (state, action) => {
 			state.token = action.payload;
+		},
+		setModerator: (state, action) => {
+			state.moderator = action.payload;
 		},
 	},
 });
@@ -29,11 +33,13 @@ export const getMeetingAndToken = (id) => async (dispatch, getState) => {
 };
 
 export const getToken = (mod) => async (dispatch) => {
-	await getAuthToken({ mod: mod }).then((authToken) =>
-		dispatch(setToken(authToken))
-	);
+	await getAuthToken({ mod: mod }).then((authToken) => {
+		dispatch(setToken(authToken));
+		dispatch(setModerator(mod));
+	});
 };
 
-export const { setMeetingId, setUsername, setToken } = meetingSlice.actions;
+export const { setMeetingId, setUsername, setToken, setModerator } =
+	meetingSlice.actions;
 
 export default meetingSlice.reducer;

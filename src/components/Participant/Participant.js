@@ -5,9 +5,11 @@ import ParticipantOptions from "../ParticipantOptions/ParticipantsOptions";
 import styles from "./Participant.module.css";
 import MicIcons from "./components/MicIcons/MicIcons";
 import NoCamScreen from "./components/NoCamScreen/NoCamScreen";
+import { useSelector } from "react-redux";
 
 export default function ParticipantView(props) {
 	const micRef = useRef(null);
+	const { moderator } = useSelector((store) => store.meeting);
 	const { webcamStream, micStream, webcamOn, micOn, isLocal, displayName } =
 		useParticipant(props.participantId);
 
@@ -59,7 +61,9 @@ export default function ParticipantView(props) {
 				<NoCamScreen displayName={displayName} />
 			)}
 
-			<ParticipantOptions participantId={props.participantId} />
+			{moderator && !isLocal && (
+				<ParticipantOptions participantId={props.participantId} />
+			)}
 			<MicIcons webcamOn={webcamOn} micOn={micOn} />
 		</div>
 	);
