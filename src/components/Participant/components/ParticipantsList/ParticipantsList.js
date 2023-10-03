@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import styles from "./ParticipantsList.module.css";
 import { FiUsers } from "react-icons/fi";
-import { SlOptionsVertical } from "react-icons/sl";
+import ParticipantOptions from "../../../ParticipantOptions/ParticipantsOptions";
+import styles from "./ParticipantsList.module.css";
 
 export default function ParticipantsList({ list, presenting }) {
 	const [showDropdown, setShowDropdown] = useState(false);
@@ -15,7 +15,7 @@ export default function ParticipantsList({ list, presenting }) {
 					{Array.from(list.values()).map((participant) => (
 						<li className={styles.listItem} key={participant.id}>
 							{participant.displayName}
-							<SlOptionsVertical />
+							<ParticipantOptions participantId={participant.id} />
 						</li>
 					))}
 				</div>

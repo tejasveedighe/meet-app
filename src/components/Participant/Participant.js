@@ -60,10 +60,7 @@ export default function ParticipantView(props) {
 			) : (
 				<NoCamScreen displayName={displayName} />
 			)}
-
-			{moderator && !isLocal && (
-				<ParticipantOptions participantId={props.participantId} />
-			)}
+			<ParticipantOptions participantId={props.participantId} />
 			<MicIcons webcamOn={webcamOn} micOn={micOn} />
 		</div>
 	);
