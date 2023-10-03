@@ -4,6 +4,7 @@ import ReactPlayer from "react-player";
 import styles from "./Participant.module.css";
 import MicIcons from "./components/MicIcons/MicIcons";
 import NoCamScreen from "./components/NoCamScreen/NoCamScreen";
+import ParticipantOptions from "../ParticipantOptions/ParticipantsOptions";
 
 export default function ParticipantView(props) {
 	const micRef = useRef(null);
@@ -58,6 +59,7 @@ export default function ParticipantView(props) {
 			) : (
 				<NoCamScreen displayName={displayName} />
 			)}
+			<ParticipantOptions participantId={props.participantId} />
 			<MicIcons webcamOn={webcamOn} micOn={micOn} />
 		</div>
 	);
