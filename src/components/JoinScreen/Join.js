@@ -6,6 +6,7 @@ import {
 	setUsername,
 } from "../../redux/meetingSlice";
 import styles from "./Join.module.css";
+import classNames from "classnames";
 
 export default function JoinScreen() {
 	const [username, setUserName] = useState(null);
@@ -49,9 +50,9 @@ export default function JoinScreen() {
 				<div className={styles.buttonsRow}>
 					<button
 						type="submit"
-						className={
+						className={classNames(
 							!meetId || !username ? styles.disabledButton : styles.button
-						}
+						)}
 						disabled={!meetId || !username}
 					>
 						Join

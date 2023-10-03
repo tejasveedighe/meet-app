@@ -14,7 +14,14 @@ function MeetingView(props) {
 	const dispatch = useDispatch();
 	const [joined, setJoined] = useState(null);
 
-	const { join, participants, meeting } = useMeeting({
+	const {
+		join,
+		participants,
+		meeting,
+		presenterId,
+		mainParticipantId,
+		localParticipant,
+	} = useMeeting({
 		onMeetingJoined: () => {
 			setJoined("JOINED");
 		},
@@ -28,7 +35,7 @@ function MeetingView(props) {
 		onEntryResponded: (participantId, decision) => {
 			if (decision === "allowed") {
 				setJoined("JOINED");
-			} else if (!meeting) {
+			} else if (localParticipant.id === participantId) {
 				setJoined("REJECTED");
 			}
 		},
@@ -43,7 +50,7 @@ function MeetingView(props) {
 		dispatch(setMeetingId(null));
 	}, [dispatch]);
 
-	const { presenterId } = useMeeting();
+	console.log(meeting, mainParticipantId);
 	return (
 		<div>
 			<h3>Meeting ID: {props.meetingId}</h3>
