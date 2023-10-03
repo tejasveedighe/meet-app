@@ -1,13 +1,12 @@
 import { Menu, Transition } from "@headlessui/react";
-import { useParticipant } from "@videosdk.live/react-sdk";
+import { useMeeting, useParticipant } from "@videosdk.live/react-sdk";
 import { Fragment, useCallback } from "react";
 
 export default function ParticipantOptions({ participantId }) {
 	const { remove } = useParticipant(participantId);
 	const handleRemoveParticipant = useCallback(() => {
-		console.log(participantId);
 		remove();
-	}, [participantId, remove]);
+	}, [remove]);
 	return (
 		<div className="absolute bottom-2 right-0 w-56 text-right">
 			<Menu as="div" className="relative inline-block text-left">

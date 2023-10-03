@@ -1,14 +1,13 @@
 import { useParticipant } from "@videosdk.live/react-sdk";
 import React, { useEffect, useMemo, useRef } from "react";
 import ReactPlayer from "react-player";
+import ParticipantOptions from "../ParticipantOptions/ParticipantsOptions";
 import styles from "./Participant.module.css";
 import MicIcons from "./components/MicIcons/MicIcons";
 import NoCamScreen from "./components/NoCamScreen/NoCamScreen";
-import ParticipantOptions from "../ParticipantOptions/ParticipantsOptions";
 
 export default function ParticipantView(props) {
 	const micRef = useRef(null);
-
 	const { webcamStream, micStream, webcamOn, micOn, isLocal, displayName } =
 		useParticipant(props.participantId);
 
@@ -59,6 +58,7 @@ export default function ParticipantView(props) {
 			) : (
 				<NoCamScreen displayName={displayName} />
 			)}
+
 			<ParticipantOptions participantId={props.participantId} />
 			<MicIcons webcamOn={webcamOn} micOn={micOn} />
 		</div>

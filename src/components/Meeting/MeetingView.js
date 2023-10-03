@@ -35,7 +35,7 @@ function MeetingView(props) {
 		onEntryResponded: (participantId, decision) => {
 			if (decision === "allowed") {
 				setJoined("JOINED");
-			} else if (localParticipant.id === participantId) {
+			} else if (!meeting) {
 				setJoined("REJECTED");
 			}
 		},
@@ -50,7 +50,6 @@ function MeetingView(props) {
 		dispatch(setMeetingId(null));
 	}, [dispatch]);
 
-	console.log(meeting, mainParticipantId);
 	return (
 		<div>
 			<h3>Meeting ID: {props.meetingId}</h3>
