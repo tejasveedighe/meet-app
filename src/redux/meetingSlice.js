@@ -8,6 +8,7 @@ export const meetingSlice = createSlice({
 		username: null,
 		token: null,
 		moderator: false,
+		mode: null,
 	},
 	reducers: {
 		setMeetingId: (state, action) => {
@@ -21,6 +22,9 @@ export const meetingSlice = createSlice({
 		},
 		setModerator: (state, action) => {
 			state.moderator = action.payload;
+		},
+		setMode: (state, action) => {
+			state.mode = action.payload;
 		},
 	},
 });
@@ -39,7 +43,7 @@ export const getToken = (mod) => async (dispatch) => {
 	});
 };
 
-export const { setMeetingId, setUsername, setToken, setModerator } =
+export const { setMeetingId, setUsername, setToken, setModerator, setMode } =
 	meetingSlice.actions;
 
 export default meetingSlice.reducer;

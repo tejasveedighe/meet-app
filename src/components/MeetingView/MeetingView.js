@@ -1,4 +1,4 @@
-import { useMeeting } from "@videosdk.live/react-sdk";
+import { MeetingConsumer, useMeeting } from "@videosdk.live/react-sdk";
 import React, { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Col, Row } from "react-simple-flex-grid";
@@ -14,14 +14,7 @@ function MeetingView(props) {
 	const dispatch = useDispatch();
 	const [joined, setJoined] = useState(null);
 
-	const {
-		join,
-		participants,
-		meeting,
-		presenterId,
-		mainParticipantId,
-		localParticipant,
-	} = useMeeting({
+	const { join, participants, meeting, presenterId } = useMeeting({
 		onMeetingJoined: () => {
 			setJoined("JOINED");
 		},

@@ -1,28 +1,20 @@
-import { MeetingProvider } from "@videosdk.live/react-sdk";
 import React from "react";
 import { useSelector } from "react-redux";
-import JoinScreen from "./components/JoinScreen/Join";
-import MeetingView from "./components/Meeting/MeetingView";
+import Livestream from "./components/Livestream/Livestream";
+import Meeting from "./components/Meeting/Meeting";
+import WelcomeScreen from "./components/WelcomeScreen/WelcomeScreen";
 
 const App = () => {
-	const { meetingId, username, token } = useSelector((store) => store.meeting);
+	const { mode } = useSelector((store) => store.meeting);
 
-	return token && meetingId && username ? (
-		<MeetingProvider
-			config={{
-				meetingId,
-				micEnabled: false,
-				webcamEnabled: false,
-				name: username,
-				multiStream: true,
-				mode: "CONFERENCE",
-			}}
-			token={token}
-		>
-			<MeetingView meetingId={meetingId} />
-		</MeetingProvider>
+	return mode === null ? (
+		<WelcomeScreen />
+	) : mode === "MEET" ? (
+		<Meeting />
+	) : mode === "STREAM" ? (
+		<Livestream />
 	) : (
-		<JoinScreen />
+		<div>Not Found</div>
 	);
 };
 
