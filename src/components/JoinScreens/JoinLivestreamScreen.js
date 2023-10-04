@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
 import {
 	getMeetingAndToken,
@@ -13,19 +13,25 @@ export default function JoinLivestreamScreen() {
 	const [meetId, setMeetId] = useState(null);
 	const dispatch = useDispatch();
 
-	const onJoinMeeting = async (e) => {
-		e.preventDefault();
-		await dispatch(getToken(false));
-		await dispatch(setUsername(username));
-		await dispatch(getMeetingAndToken(meetId));
-	};
+	const onJoinMeeting = useCallback(
+		async (e) => {
+			e.preventDefault();
+			await dispatch(getToken(false));
+			await dispatch(setUsername(username));
+			await dispatch(getMeetingAndToken(meetId));
+		},
+		[dispatch, meetId, username]
+	);
 
-	const onCreateMeeting = async (e) => {
-		e.preventDefault();
-		await dispatch(getToken(true));
-		await dispatch(setUsername(username));
-		await dispatch(getMeetingAndToken(meetId));
-	};
+	const onCreateMeeting = useCallback(
+		async (e) => {
+			e.preventDefault();
+			await dispatch(getToken(true));
+			await dispatch(setUsername(username));
+			await dispatch(getMeetingAndToken(meetId));
+		},
+		[dispatch, meetId, username]
+	);
 
 	return (
 		<form onSubmit={onJoinMeeting}>

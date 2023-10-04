@@ -2,6 +2,7 @@ import { MeetingProvider } from "@videosdk.live/react-sdk";
 import React from "react";
 import { useSelector } from "react-redux";
 import JoinLivestreamScreen from "../JoinScreens/JoinLivestreamScreen";
+import Container from "./Container";
 
 export default function Livestream() {
 	const { meetingId, username, token } = useSelector((store) => store.meeting);
@@ -15,7 +16,9 @@ export default function Livestream() {
 			}}
 			token={token}
 			joinWithoutUserInteraction
-		></MeetingProvider>
+		>
+			<Container />
+		</MeetingProvider>
 	) : (
 		<JoinLivestreamScreen />
 	);
