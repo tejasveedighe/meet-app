@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import {
@@ -6,12 +7,10 @@ import {
 	setUsername,
 } from "../../redux/meetingSlice";
 import styles from "./Join.module.css";
-import classNames from "classnames";
 
-export default function JoinScreen() {
+export default function JoinLivestreamScreen() {
 	const [username, setUserName] = useState(null);
 	const [meetId, setMeetId] = useState(null);
-
 	const dispatch = useDispatch();
 
 	const onJoinMeeting = async (e) => {
@@ -55,7 +54,7 @@ export default function JoinScreen() {
 						)}
 						disabled={!meetId || !username}
 					>
-						Join
+						Join Livestream
 					</button>
 					OR
 					<button
@@ -65,7 +64,7 @@ export default function JoinScreen() {
 						onClick={onCreateMeeting}
 						disabled={meetId || !username}
 					>
-						Create Meeting
+						Start Livestream
 					</button>
 				</div>
 			</div>

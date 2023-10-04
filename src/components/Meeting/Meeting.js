@@ -1,8 +1,8 @@
-import React from "react";
-import MeetingView from "../MeetingView/MeetingView";
-import JoinScreen from "../JoinScreen/Join";
 import { MeetingProvider } from "@videosdk.live/react-sdk";
+import React from "react";
 import { useSelector } from "react-redux";
+import JoinMeetingScreen from "../JoinScreens/JoinMeetingScreen";
+import MeetingView from "../MeetingView/MeetingView";
 
 export default function Meeting() {
 	const { meetingId, username, token } = useSelector((store) => store.meeting);
@@ -21,6 +21,6 @@ export default function Meeting() {
 			<MeetingView meetingId={meetingId} />
 		</MeetingProvider>
 	) : (
-		<JoinScreen />
+		<JoinMeetingScreen />
 	);
 }
