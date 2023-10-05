@@ -13,6 +13,7 @@ export default function VideoPlayer() {
 	const [duration, setDuration] = useState([0, 0]);
 	const [durationSec, setDurationSec] = useState();
 
+
 	const handlePlay = useCallback(() => {
 		if (isPlaying) {
 			videoRef.current.pause();
@@ -23,14 +24,15 @@ export default function VideoPlayer() {
 		}
 	}, [isPlaying]);
 
-	const sec2Min = (sec) => {
+	const sec2Min = useCallback((sec) => {
 		const min = Math.floor(sec / 60);
 		const secRemain = Math.floor(sec % 60);
 		return {
 			min: min,
 			sec: secRemain,
 		};
-	};
+	}, []);
+
 	useEffect(() => {
 		const { min, sec } = sec2Min(videoRef.current.duration);
 		setDurationSec(videoRef.current.duration);
@@ -42,7 +44,11 @@ export default function VideoPlayer() {
 			setCurrentTime([min, sec]);
 		}, 1000);
 		return () => clearInterval(interval);
-	}, [isPlaying]);
+	}, [currentTime, isPlaying, sec2Min]);
+
+	const handleChangeTime = useCallback((e) => {
+		videoRef.current.currentTime = e.target.value;
+	}, []);
 
 	return (
 		<div className={styles.parent}>
@@ -87,7 +93,7 @@ export default function VideoPlayer() {
 					defaultValue={0}
 					value={currentTimeSec}
 					className={styles.timeline}
-					onChange={(e) => (videoRef.current.currentTime = e.target.value)}
+					onChange={handleChangeTime}
 				/>
 			</div>
 		</div>
