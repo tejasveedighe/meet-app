@@ -1,6 +1,35 @@
-.videoPlayerContainer {
-    display: flex;
-    height: 720px;
-    align-items: center;
-    justify-content: center;
+.parent {
+	display: flex;
+	justify-content: center;
+	margin: 0 auto;
+}
+
+.playerContainer {
+	display: flex;
+	flex-direction: column;
+	margin-top: 5em;
+	border-radius: 1em;
+	overflow: hidden;
+}
+
+.videoPlayer {
+	border-radius: 1em;
+	z-index: -1;
+}
+
+.controls {
+	margin-top: -3.5em;
+	display: flex;
+    z-index: 1;
+    color: white;
+    width: 200px;
+}
+
+.controlButton {
+    border: none;
+    background: none;
+}
+
+.controlButton:hover {
+    cursor: pointer;
 }
