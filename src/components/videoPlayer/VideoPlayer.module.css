@@ -1,0 +1,6 @@
+.videoPlayerContainer {
+    display: flex;
+    height: 720px;
+    align-items: center;
+    justify-content: center;
+}
