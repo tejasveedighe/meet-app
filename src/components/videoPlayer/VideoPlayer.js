@@ -2,9 +2,9 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { IconContext } from "react-icons";
 import { BiPause, BiPlay, BiSkipNext, BiSkipPrevious } from "react-icons/bi";
 import { RiForward15Line, RiReplay15Line } from "react-icons/ri";
-import styles from "./VideoPlayer.module.css";
 import { useDispatch, useSelector } from "react-redux";
-import { updateVideoData } from "../../redux/videoStreamingSlice";
+import { setVideoData } from "../../redux/videoStreamingSlice";
+import styles from "./VideoPlayer.module.css";
 
 export default function VideoPlayer() {
 	const { videos } = useSelector((store) => store.video);
@@ -60,20 +60,22 @@ export default function VideoPlayer() {
 			videoRef.current.pause();
 			setIsPlaying(false);
 
+			const { min, sec } = sec2Min(videoRef.current.currentTime);
 			const _video = {
 				...currentVideo,
 				progress: {
-					time: currentTime,
-					sec: currentTimeSec,
+					time: [min, sec],
+					sec: sec,
 				},
 			};
-			dispatch(updateVideoData(_video));
+			dispatch(setVideoData(_video));
 			const vid = videos.find((vid) => vid.id === id);
 			setCurrentVideo(vid);
 			setCurrentTime(vid.progress.time);
 			setCurrentTimeSec(vid.progress.sec);
+			videoRef.current.currentTime = vid.progress.sec;
 		},
-		[currentTime, currentTimeSec, currentVideo, dispatch, videos]
+		[currentVideo, dispatch, sec2Min, videos]
 	);
 
 	return (
