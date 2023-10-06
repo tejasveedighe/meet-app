@@ -1,19 +1,22 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { IconContext } from "react-icons";
 import { BiPause, BiPlay, BiSkipNext, BiSkipPrevious } from "react-icons/bi";
+import { RiForward15Line, RiReplay15Line } from "react-icons/ri";
 import styles from "./VideoPlayer.module.css";
-import Videos from "./Videos.json";
+import { useDispatch, useSelector } from "react-redux";
+import { updateVideoData } from "../../redux/videoStreamingSlice";
 
 export default function VideoPlayer() {
-	const [currentVideo, setCurrentVideo] = useState(Videos[0]);
+	const { videos } = useSelector((store) => store.video);
+	const [currentVideo, setCurrentVideo] = useState(videos[0]);
 
 	const videoRef = useRef(null);
 	const [isPlaying, setIsPlaying] = useState(false);
 
 	const [currentTime, setCurrentTime] = useState([0, 0]);
-	const [currentTimeSec, setCurrentTimeSec] = useState();
+	const [currentTimeSec, setCurrentTimeSec] = useState(0);
 	const [duration, setDuration] = useState([0, 0]);
-	const [durationSec, setDurationSec] = useState();
+	const [durationSec, setDurationSec] = useState(0);
 
 	const handlePlay = useCallback(() => {
 		if (isPlaying) {
@@ -35,37 +38,42 @@ export default function VideoPlayer() {
 	}, []);
 
 	useEffect(() => {
-		if (isPlaying) {
-			const { min, sec } = sec2Min(videoRef.current.duration);
-			setDurationSec(videoRef.current.duration);
-			setDuration([min, sec]);
+		const { min, sec } = sec2Min(videoRef.current.duration);
+		setDurationSec(videoRef.current.duration);
+		setDuration([min, sec]);
 
-			const interval = setInterval(() => {
-				const { min, sec } = sec2Min(videoRef.current.currentTime);
-				setCurrentTimeSec(videoRef.current.currentTime);
-				setCurrentTime([min, sec]);
-			}, 1000);
-			return () => clearInterval(interval);
-		}
+		const interval = setInterval(() => {
+			const { min, sec } = sec2Min(videoRef.current.currentTime);
+			setCurrentTimeSec(videoRef.current.currentTime);
+			setCurrentTime([min, sec]);
+		}, 1000);
+		return () => clearInterval(interval);
 	}, [currentTime, isPlaying, sec2Min]);
 
 	const handleChangeTime = useCallback((e) => {
 		videoRef.current.currentTime = e.target.value;
 	}, []);
 
-	useEffect(() => {
-		console.log(Videos);
-		setCurrentTime(currentVideo.progress[0]);
-		setCurrentTimeSec(currentVideo.progress[1]);
-	}, [currentVideo.progress]);
-
+	const dispatch = useDispatch();
 	const handleChangeVideo = useCallback(
-		(vid_id) => {
-			currentVideo.progress = [currentTime, currentTimeSec];
-			const vid = Videos.find((vid) => vid.id === vid_id);
+		(id) => {
+			videoRef.current.pause();
+			setIsPlaying(false);
+
+			const _video = {
+				...currentVideo,
+				progress: {
+					time: currentTime,
+					sec: currentTimeSec,
+				},
+			};
+			dispatch(updateVideoData(_video));
+			const vid = videos.find((vid) => vid.id === id);
 			setCurrentVideo(vid);
+			setCurrentTime(vid.progress.time);
+			setCurrentTimeSec(vid.progress.sec);
 		},
-		[currentTime, currentTimeSec, currentVideo]
+		[currentTime, currentTimeSec, currentVideo, dispatch, videos]
 	);
 
 	return (
@@ -88,6 +96,9 @@ export default function VideoPlayer() {
 							<IconContext.Provider value={{ color: "white", size: "2em" }}>
 								<BiSkipPrevious />
 							</IconContext.Provider>
+							<button className={styles.controlButton}>
+								<RiReplay15Line />
+							</button>
 							{isPlaying ? (
 								<button className={styles.controlButton} onClick={handlePlay}>
 									<IconContext.Provider value={{ color: "white", size: "2em" }}>
@@ -101,6 +112,9 @@ export default function VideoPlayer() {
 									</IconContext.Provider>
 								</button>
 							)}
+							<button className={styles.controlButton}>
+								<RiForward15Line />
+							</button>
 							<IconContext.Provider value={{ color: "white", size: "2em" }}>
 								<BiSkipNext />
 							</IconContext.Provider>
@@ -111,7 +125,7 @@ export default function VideoPlayer() {
 					</div>
 					<input
 						type="range"
-						min="0"
+						min={0}
 						max={durationSec}
 						defaultValue={0}
 						value={currentTimeSec}
@@ -121,7 +135,7 @@ export default function VideoPlayer() {
 				</div>
 				<div className={styles.videoListContainer}>
 					<ul>
-						{Videos.map((vid) => (
+						{videos.map((vid) => (
 							<li
 								key={vid.id}
 								className={styles.videoLink}
