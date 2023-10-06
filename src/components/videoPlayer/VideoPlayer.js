@@ -78,6 +78,13 @@ export default function VideoPlayer() {
 		[currentVideo, dispatch, sec2Min, videos]
 	);
 
+	const handleSeekForward = useCallback(() => {
+		videoRef.current.currentTime += 15;
+	}, []);
+	const handleSeekBackward = useCallback(() => {
+		videoRef.current.currentTime -= 15;
+	}, []);
+
 	return (
 		<div className="content-center justify-center flex-col">
 			<div className="p-4">
@@ -98,7 +105,7 @@ export default function VideoPlayer() {
 							<IconContext.Provider value={{ color: "white", size: "2em" }}>
 								<BiSkipPrevious />
 							</IconContext.Provider>
-							<button className={styles.controlButton}>
+							<button className={styles.controlButton} handleSeekBackward>
 								<RiReplay15Line />
 							</button>
 							{isPlaying ? (
@@ -114,7 +121,10 @@ export default function VideoPlayer() {
 									</IconContext.Provider>
 								</button>
 							)}
-							<button className={styles.controlButton}>
+							<button
+								className={styles.controlButton}
+								onClick={handleSeekForward}
+							>
 								<RiForward15Line />
 							</button>
 							<IconContext.Provider value={{ color: "white", size: "2em" }}>
