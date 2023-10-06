@@ -1,15 +1,15 @@
 .parent {
 	display: flex;
-align-items: center;
-justify-content: space-around;
+	align-items: center;
+	justify-content: space-around;
 }
 
 .playerContainer {
-  display: flex;
+	display: flex;
 	flex-direction: column;
 	margin-top: 5em;
 	overflow: hidden;
-  width: 70%;
+	width: 70%;
 }
 
 .videoPlayer {
@@ -50,7 +50,7 @@ justify-content: space-around;
 }
 
 .videoLink {
-  padding: 10px;
-  list-style-type: disc;
-  border: 1px solid;
+	padding: 10px;
+	list-style-type: disc;
+	border: 1px solid;
 }

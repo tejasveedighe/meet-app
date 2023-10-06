@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { IconContext } from "react-icons";
 import { BiPause, BiPlay, BiSkipNext, BiSkipPrevious } from "react-icons/bi";
-import { url } from "../helper";
 import styles from "./VideoPlayer.module.css";
 import Videos from "./Videos.json";
 
@@ -36,16 +35,18 @@ export default function VideoPlayer() {
 	}, []);
 
 	useEffect(() => {
-		const { min, sec } = sec2Min(videoRef.current.duration);
-		setDurationSec(videoRef.current.duration);
-		setDuration([min, sec]);
+		if (isPlaying) {
+			const { min, sec } = sec2Min(videoRef.current.duration);
+			setDurationSec(videoRef.current.duration);
+			setDuration([min, sec]);
 
-		const interval = setInterval(() => {
-			const { min, sec } = sec2Min(videoRef.current.currentTime);
-			setCurrentTimeSec(videoRef.current.currentTime);
-			setCurrentTime([min, sec]);
-		}, 1000);
-		return () => clearInterval(interval);
+			const interval = setInterval(() => {
+				const { min, sec } = sec2Min(videoRef.current.currentTime);
+				setCurrentTimeSec(videoRef.current.currentTime);
+				setCurrentTime([min, sec]);
+			}, 1000);
+			return () => clearInterval(interval);
+		}
 	}, [currentTime, isPlaying, sec2Min]);
 
 	const handleChangeTime = useCallback((e) => {
@@ -53,8 +54,19 @@ export default function VideoPlayer() {
 	}, []);
 
 	useEffect(() => {
-		setCurrentVideo(Videos[0]);
-	}, []);
+		console.log(Videos);
+		setCurrentTime(currentVideo.progress[0]);
+		setCurrentTimeSec(currentVideo.progress[1]);
+	}, [currentVideo.progress]);
+
+	const handleChangeVideo = useCallback(
+		(vid_id) => {
+			currentVideo.progress = [currentTime, currentTimeSec];
+			const vid = Videos.find((vid) => vid.id === vid_id);
+			setCurrentVideo(vid);
+		},
+		[currentTime, currentTimeSec, currentVideo]
+	);
 
 	return (
 		<div className="content-center justify-center flex-col">
@@ -113,7 +125,7 @@ export default function VideoPlayer() {
 							<li
 								key={vid.id}
 								className={styles.videoLink}
-								onClick={() => setCurrentVideo(vid)}
+								onClick={() => handleChangeVideo(vid.id)}
 							>
 								({vid.id})-
 								{vid.title}
