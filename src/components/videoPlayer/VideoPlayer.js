@@ -105,7 +105,10 @@ export default function VideoPlayer() {
 							<IconContext.Provider value={{ color: "white", size: "2em" }}>
 								<BiSkipPrevious />
 							</IconContext.Provider>
-							<button className={styles.controlButton} handleSeekBackward>
+							<button
+								className={styles.controlButton}
+								onClick={handleSeekBackward}
+							>
 								<RiReplay15Line />
 							</button>
 							{isPlaying ? (
