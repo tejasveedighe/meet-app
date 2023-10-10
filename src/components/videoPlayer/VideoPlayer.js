@@ -5,6 +5,7 @@ import { RiForward15Line, RiReplay15Line } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
 import { setVideoData } from "../../redux/videoStreamingSlice";
 import styles from "./VideoPlayer.module.css";
+import UploadVideo from "../UploadVideo/UploadVideo";
 
 export default function VideoPlayer() {
 	const { videos } = useSelector((store) => store.video);
@@ -86,83 +87,90 @@ export default function VideoPlayer() {
 	}, []);
 
 	return (
-		<div className="content-center justify-center flex-col">
-			<div className="p-4">
-				<p>Id - {currentVideo.id}</p>
-				<p>Title - {currentVideo.title}</p>
-			</div>
-			<div className={styles.parent}>
-				<div className={styles.playerContainer}>
-					<video
-						ref={videoRef}
-						width="70%"
-						height="70%"
-						className={styles.videoPlayer}
-						src={currentVideo.url}
-					></video>
-					<div className={styles.videoInfo}>
-						<div className={styles.controls}>
-							<IconContext.Provider value={{ color: "white", size: "2em" }}>
-								<BiSkipPrevious />
-							</IconContext.Provider>
-							<button
-								className={styles.controlButton}
-								onClick={handleSeekBackward}
-							>
-								<RiReplay15Line />
-							</button>
-							{isPlaying ? (
-								<button className={styles.controlButton} onClick={handlePlay}>
-									<IconContext.Provider value={{ color: "white", size: "2em" }}>
-										<BiPause />
-									</IconContext.Provider>
+		<>
+			<div className="content-center justify-center flex-col">
+				<div className="p-4">
+					<p>Id - {currentVideo.id}</p>
+					<p>Title - {currentVideo.title}</p>
+				</div>
+				<div className={styles.parent}>
+					<div className={styles.playerContainer}>
+						<video
+							ref={videoRef}
+							width="70%"
+							height="70%"
+							className={styles.videoPlayer}
+							src={currentVideo.url}
+						></video>
+						<div className={styles.videoInfo}>
+							<div className={styles.controls}>
+								<IconContext.Provider value={{ color: "white", size: "2em" }}>
+									<BiSkipPrevious />
+								</IconContext.Provider>
+								<button
+									className={styles.controlButton}
+									onClick={handleSeekBackward}
+								>
+									<RiReplay15Line />
 								</button>
-							) : (
-								<button className={styles.controlButton} onClick={handlePlay}>
-									<IconContext.Provider value={{ color: "white", size: "2em" }}>
-										<BiPlay />
-									</IconContext.Provider>
+								{isPlaying ? (
+									<button className={styles.controlButton} onClick={handlePlay}>
+										<IconContext.Provider
+											value={{ color: "white", size: "2em" }}
+										>
+											<BiPause />
+										</IconContext.Provider>
+									</button>
+								) : (
+									<button className={styles.controlButton} onClick={handlePlay}>
+										<IconContext.Provider
+											value={{ color: "white", size: "2em" }}
+										>
+											<BiPlay />
+										</IconContext.Provider>
+									</button>
+								)}
+								<button
+									className={styles.controlButton}
+									onClick={handleSeekForward}
+								>
+									<RiForward15Line />
 								</button>
-							)}
-							<button
-								className={styles.controlButton}
-								onClick={handleSeekForward}
-							>
-								<RiForward15Line />
-							</button>
-							<IconContext.Provider value={{ color: "white", size: "2em" }}>
-								<BiSkipNext />
-							</IconContext.Provider>
+								<IconContext.Provider value={{ color: "white", size: "2em" }}>
+									<BiSkipNext />
+								</IconContext.Provider>
+							</div>
+							<div className={styles.duration}>
+								{currentTime[0]}:{currentTime[1]} / {duration[0]}:{duration[1]}
+							</div>
 						</div>
-						<div className={styles.duration}>
-							{currentTime[0]}:{currentTime[1]} / {duration[0]}:{duration[1]}
-						</div>
+						<input
+							type="range"
+							min={0}
+							max={durationSec}
+							defaultValue={0}
+							value={currentTimeSec}
+							className={styles.timeline}
+							onChange={handleChangeTime}
+						/>
 					</div>
-					<input
-						type="range"
-						min={0}
-						max={durationSec}
-						defaultValue={0}
-						value={currentTimeSec}
-						className={styles.timeline}
-						onChange={handleChangeTime}
-					/>
-				</div>
-				<div className={styles.videoListContainer}>
-					<ul>
-						{videos.map((vid) => (
-							<li
-								key={vid.id}
-								className={styles.videoLink}
-								onClick={() => handleChangeVideo(vid.id)}
-							>
-								({vid.id})-
-								{vid.title}
-							</li>
-						))}
-					</ul>
+					<div className={styles.videoListContainer}>
+						<ul>
+							{videos.map((vid) => (
+								<li
+									key={vid.id}
+									className={styles.videoLink}
+									onClick={() => handleChangeVideo(vid.id)}
+								>
+									({vid.id})-
+									{vid.title}
+								</li>
+							))}
+						</ul>
+					</div>
 				</div>
 			</div>
-		</div>
+			<UploadVideo />
+		</>
 	);
 }
