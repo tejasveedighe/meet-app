@@ -12,11 +12,8 @@
 	width: 70%;
 }
 
-.videoPlayer {
-	z-index: -1;
-}
-
 .videoInfo {
+	z-index: 2;
 	width: inherit;
 	display: flex;
 	align-items: center;

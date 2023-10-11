@@ -12,8 +12,11 @@ export default function VideoPlayer() {
 	const { videos } = useSelector((store) => store.video);
 	const [currentVideo, setCurrentVideo] = useState(videos[0]);
 
+	const playerContainerRef = useRef(null);
 	const videoRef = useRef(null);
 	const [isPlaying, setIsPlaying] = useState(false);
+
+	const [showControls, setShowControls] = useState(true);
 
 	const [currentTime, setCurrentTime] = useState([0, 0]);
 	const [currentTimeSec, setCurrentTimeSec] = useState(0);
@@ -97,6 +100,18 @@ export default function VideoPlayer() {
 		videoRef.current.playbackRate = playbackRate;
 	}, [playbackRate]);
 
+	const handleClickOutside = useCallback((event) => {
+		if (videoRef.current && !videoRef.current.contains(event.target))
+			setShowControls(false);
+		else setShowControls(true);
+	}, []);
+	useEffect(() => {
+		document.addEventListener("mouseover", handleClickOutside);
+		return () => {
+			document.removeEventListener("mouseover", handleClickOutside);
+		};
+	}, [handleClickOutside]);
+
 	return (
 		<>
 			<div className="content-center justify-center flex-col">
@@ -105,83 +120,91 @@ export default function VideoPlayer() {
 					<p>Title - {currentVideo.title}</p>
 				</div>
 				<div className={styles.parent}>
-					<div className={styles.playerContainer}>
+					<div ref={playerContainerRef} className={styles.playerContainer}>
 						<video
 							ref={videoRef}
 							defaultPlaybackRate={1}
 							width="70%"
-							height="70%"
+							height="100%"
 							className={styles.videoPlayer}
 							src={currentVideo.url}
 						></video>
-						<div className={classNames(styles.videoInfo, "bg-slate-700")}>
-							<div className="flex items-center">
-								<div className={styles.controls}>
-									<IconContext.Provider value={{ color: "white", size: "2em" }}>
-										<BiSkipPrevious />
-									</IconContext.Provider>
-									<button
-										className={styles.controlButton}
-										onClick={handleSeekBackward}
-									>
-										<RiReplay15Line />
-									</button>
-									{isPlaying ? (
+						{showControls ? (
+							<div className={classNames(styles.videoInfo, "bg-slate-700")}>
+								<div className="flex items-center">
+									<div className={styles.controls}>
+										<IconContext.Provider
+											value={{ color: "white", size: "2em" }}
+										>
+											<BiSkipPrevious />
+										</IconContext.Provider>
 										<button
 											className={styles.controlButton}
-											onClick={handlePlay}
+											onClick={handleSeekBackward}
 										>
-											<IconContext.Provider
-												value={{ color: "white", size: "2em" }}
-											>
-												<BiPause />
-											</IconContext.Provider>
+											<RiReplay15Line />
 										</button>
-									) : (
+										{isPlaying ? (
+											<button
+												className={styles.controlButton}
+												onClick={handlePlay}
+											>
+												<IconContext.Provider
+													value={{ color: "white", size: "2em" }}
+												>
+													<BiPause />
+												</IconContext.Provider>
+											</button>
+										) : (
+											<button
+												className={styles.controlButton}
+												onClick={handlePlay}
+											>
+												<IconContext.Provider
+													value={{ color: "white", size: "2em" }}
+												>
+													<BiPlay />
+												</IconContext.Provider>
+											</button>
+										)}
 										<button
 											className={styles.controlButton}
-											onClick={handlePlay}
+											onClick={handleSeekForward}
 										>
-											<IconContext.Provider
-												value={{ color: "white", size: "2em" }}
-											>
-												<BiPlay />
-											</IconContext.Provider>
+											<RiForward15Line />
 										</button>
-									)}
-									<button
-										className={styles.controlButton}
-										onClick={handleSeekForward}
-									>
-										<RiForward15Line />
-									</button>
-									<IconContext.Provider value={{ color: "white", size: "2em" }}>
-										<BiSkipNext />
-									</IconContext.Provider>
-								</div>
-								<div className={styles.duration}>
-									{currentTime[0]}:{currentTime[1]} / {duration[0]}:
-									{duration[1]}
-								</div>
-							</div>
-							<div className="flex relative">
-								<button onClick={handleSettingsClick}>x{playbackRate}</button>
-
-								{showPlaybackMenu ? (
-									<div className="absolute bg-slate-500 p-2 w-40 bottom-8 right-2 flex items-center justify-between">
-										<button onClick={() => setPlaybackRate(0.25)}>0.25</button>
-										<span className="border-2 border-cyan-50 h-6"></span>
-										<button onClick={() => setPlaybackRate(0.5)}>0.5</button>
-										<span className="border-2 border-cyan-50 h-6"></span>
-										<button onClick={() => setPlaybackRate(1)}>1</button>
-										<span className="border-2 border-cyan-50 h-6"></span>
-										<button onClick={() => setPlaybackRate(1.5)}>1.5</button>
-										<span className="border-2 border-cyan-50 h-6"></span>
-										<button onClick={() => setPlaybackRate(2.0)}>2</button>
+										<IconContext.Provider
+											value={{ color: "white", size: "2em" }}
+										>
+											<BiSkipNext />
+										</IconContext.Provider>
 									</div>
-								) : null}
+									<div className={styles.duration}>
+										{currentTime[0]}:{currentTime[1]} / {duration[0]}:
+										{duration[1]}
+									</div>
+								</div>
+								<div className="flex relative">
+									<button onClick={handleSettingsClick}>x{playbackRate}</button>
+
+									{showPlaybackMenu ? (
+										<div className="absolute bg-slate-500 p-2 w-40 bottom-8 right-2 flex items-center justify-between">
+											<button onClick={() => setPlaybackRate(0.25)}>
+												0.25
+											</button>
+											<span className="border-2 border-cyan-50 h-6"></span>
+											<button onClick={() => setPlaybackRate(0.5)}>0.5</button>
+											<span className="border-2 border-cyan-50 h-6"></span>
+											<button onClick={() => setPlaybackRate(1)}>1</button>
+											<span className="border-2 border-cyan-50 h-6"></span>
+											<button onClick={() => setPlaybackRate(1.5)}>1.5</button>
+											<span className="border-2 border-cyan-50 h-6"></span>
+											<button onClick={() => setPlaybackRate(2.0)}>2</button>
+										</div>
+									) : null}
+								</div>
 							</div>
-						</div>
+						) : null}
 						<input
 							type="range"
 							min={0}
