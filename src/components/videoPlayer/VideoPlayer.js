@@ -7,16 +7,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { setVideoData } from "../../redux/videoStreamingSlice";
 import UploadVideo from "../UploadVideo/UploadVideo";
 import styles from "./VideoPlayer.module.css";
+import VideoDetails from "./components/VideoDetails";
+import VideoLists from "./components/VideoLists";
 
 export default function VideoPlayer() {
 	const { videos } = useSelector((store) => store.video);
 	const [currentVideo, setCurrentVideo] = useState(videos[0]);
 
-	const playerContainerRef = useRef(null);
 	const videoRef = useRef(null);
 	const [isPlaying, setIsPlaying] = useState(false);
-
-	const [showControls, setShowControls] = useState(true);
 
 	const [currentTime, setCurrentTime] = useState([0, 0]);
 	const [currentTimeSec, setCurrentTimeSec] = useState(0);
@@ -86,12 +85,10 @@ export default function VideoPlayer() {
 		[currentVideo, dispatch, sec2Min, videos]
 	);
 
-	const handleSeekForward = useCallback(() => {
-		videoRef.current.currentTime += 15;
+	const handleSeek = useCallback((val) => {
+		videoRef.current.currentTime += val;
 	}, []);
-	const handleSeekBackward = useCallback(() => {
-		videoRef.current.currentTime -= 15;
-	}, []);
+
 	const handleSettingsClick = useCallback(() => {
 		setShowPlaybackMenu((prev) => !prev);
 	}, []);
@@ -100,135 +97,119 @@ export default function VideoPlayer() {
 		videoRef.current.playbackRate = playbackRate;
 	}, [playbackRate]);
 
-	const handleClickOutside = useCallback((event) => {
-		if (videoRef.current && !videoRef.current.contains(event.target))
-			setShowControls(false);
-		else setShowControls(true);
-	}, []);
-	useEffect(() => {
-		document.addEventListener("mouseover", handleClickOutside);
-		return () => {
-			document.removeEventListener("mouseover", handleClickOutside);
-		};
-	}, [handleClickOutside]);
+	const handleVideoClick = useCallback(
+		(event) => {
+			if (videoRef.current && videoRef.current.contains(event.target)) {
+				setIsPlaying((prev) => !prev);
+				handlePlay();
+			}
+		},
+		[handlePlay]
+	);
+	useEffect(
+		(event) => {
+			document.addEventListener("mousedown", handleVideoClick);
+
+			return () => document.removeEventListener("mousedown", handleVideoClick);
+		},
+		[handleVideoClick]
+	);
 
 	return (
 		<>
 			<div className="content-center justify-center flex-col">
-				<div className="p-4">
-					<p>Id - {currentVideo.id}</p>
-					<p>Title - {currentVideo.title}</p>
-				</div>
+				<VideoDetails
+					videoId={currentVideo.id}
+					videoTitle={currentVideo.title}
+				/>
 				<div className={styles.parent}>
-					<div ref={playerContainerRef} className={styles.playerContainer}>
+					<div className={styles.playerContainer}>
 						<video
 							ref={videoRef}
 							defaultPlaybackRate={1}
-							width="70%"
-							height="100%"
+							width="1270"
+							height="720"
 							className={styles.videoPlayer}
 							src={currentVideo.url}
 						></video>
-						{showControls ? (
-							<div className={classNames(styles.videoInfo, "bg-slate-700")}>
-								<div className="flex items-center">
-									<div className={styles.controls}>
-										<IconContext.Provider
-											value={{ color: "white", size: "2em" }}
-										>
-											<BiSkipPrevious />
-										</IconContext.Provider>
+						<div className={classNames(styles.videoInfo, "bg-slate-700")}>
+							<div className="flex items-center">
+								<div className={styles.controls}>
+									<IconContext.Provider value={{ color: "white", size: "2em" }}>
+										<BiSkipPrevious />
+									</IconContext.Provider>
+									<button
+										className={styles.controlButton}
+										onClick={() => handleSeek(-15)}
+									>
+										<RiReplay15Line />
+									</button>
+									{isPlaying ? (
 										<button
 											className={styles.controlButton}
-											onClick={handleSeekBackward}
+											onClick={handlePlay}
 										>
-											<RiReplay15Line />
+											<IconContext.Provider
+												value={{ color: "white", size: "2em" }}
+											>
+												<BiPause />
+											</IconContext.Provider>
 										</button>
-										{isPlaying ? (
-											<button
-												className={styles.controlButton}
-												onClick={handlePlay}
-											>
-												<IconContext.Provider
-													value={{ color: "white", size: "2em" }}
-												>
-													<BiPause />
-												</IconContext.Provider>
-											</button>
-										) : (
-											<button
-												className={styles.controlButton}
-												onClick={handlePlay}
-											>
-												<IconContext.Provider
-													value={{ color: "white", size: "2em" }}
-												>
-													<BiPlay />
-												</IconContext.Provider>
-											</button>
-										)}
+									) : (
 										<button
 											className={styles.controlButton}
-											onClick={handleSeekForward}
+											onClick={handlePlay}
 										>
-											<RiForward15Line />
+											<IconContext.Provider
+												value={{ color: "white", size: "2em" }}
+											>
+												<BiPlay />
+											</IconContext.Provider>
 										</button>
-										<IconContext.Provider
-											value={{ color: "white", size: "2em" }}
-										>
-											<BiSkipNext />
-										</IconContext.Provider>
-									</div>
-									<div className={styles.duration}>
-										{currentTime[0]}:{currentTime[1]} / {duration[0]}:
-										{duration[1]}
-									</div>
+									)}
+									<button
+										className={styles.controlButton}
+										onClick={() => handleSeek(15)}
+									>
+										<RiForward15Line />
+									</button>
+									<IconContext.Provider value={{ color: "white", size: "2em" }}>
+										<BiSkipNext />
+									</IconContext.Provider>
 								</div>
-								<div className="flex relative">
-									<button onClick={handleSettingsClick}>x{playbackRate}</button>
-
-									{showPlaybackMenu ? (
-										<div className="absolute bg-slate-500 p-2 w-40 bottom-8 right-2 flex items-center justify-between">
-											<button onClick={() => setPlaybackRate(0.25)}>
-												0.25
-											</button>
-											<span className="border-2 border-cyan-50 h-6"></span>
-											<button onClick={() => setPlaybackRate(0.5)}>0.5</button>
-											<span className="border-2 border-cyan-50 h-6"></span>
-											<button onClick={() => setPlaybackRate(1)}>1</button>
-											<span className="border-2 border-cyan-50 h-6"></span>
-											<button onClick={() => setPlaybackRate(1.5)}>1.5</button>
-											<span className="border-2 border-cyan-50 h-6"></span>
-											<button onClick={() => setPlaybackRate(2.0)}>2</button>
-										</div>
-									) : null}
+								<div className={styles.duration}>
+									{currentTime[0]}:{currentTime[1]} / {duration[0]}:
+									{duration[1]}
 								</div>
 							</div>
-						) : null}
+							<div className="flex relative">
+								<button onClick={handleSettingsClick}>x{playbackRate}</button>
+
+								{showPlaybackMenu ? (
+									<div className="absolute bg-slate-500 p-2 w-40 bottom-8 right-2 flex items-center justify-between">
+										<button onClick={() => setPlaybackRate(0.25)}>0.25</button>
+										<span className="border-2 border-cyan-50 h-6"></span>
+										<button onClick={() => setPlaybackRate(0.5)}>0.5</button>
+										<span className="border-2 border-cyan-50 h-6"></span>
+										<button onClick={() => setPlaybackRate(1)}>1</button>
+										<span className="border-2 border-cyan-50 h-6"></span>
+										<button onClick={() => setPlaybackRate(1.5)}>1.5</button>
+										<span className="border-2 border-cyan-50 h-6"></span>
+										<button onClick={() => setPlaybackRate(2.0)}>2</button>
+									</div>
+								) : null}
+							</div>
+						</div>
 						<input
 							type="range"
 							min={0}
 							max={durationSec}
 							defaultValue={0}
 							value={currentTimeSec}
-							className={styles.timeline}
 							onChange={handleChangeTime}
 						/>
 					</div>
-					<div className={styles.videoListContainer}>
-						<ul>
-							{videos.map((vid) => (
-								<li
-									key={vid.id}
-									className={styles.videoLink}
-									onClick={() => handleChangeVideo(vid.id)}
-								>
-									({vid.id})-
-									{vid.title}
-								</li>
-							))}
-						</ul>
-					</div>
+					<VideoLists videos={videos} handleChangeVideo={handleChangeVideo} />
 				</div>
 			</div>
 			<UploadVideo />
