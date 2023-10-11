@@ -106,14 +106,11 @@ export default function VideoPlayer() {
 		},
 		[handlePlay]
 	);
-	useEffect(
-		(event) => {
-			document.addEventListener("mousedown", handleVideoClick);
+	useEffect(() => {
+		document.addEventListener("mousedown", handleVideoClick);
 
-			return () => document.removeEventListener("mousedown", handleVideoClick);
-		},
-		[handleVideoClick]
-	);
+		return () => document.removeEventListener("mousedown", handleVideoClick);
+	}, [handleVideoClick]);
 
 	return (
 		<>
