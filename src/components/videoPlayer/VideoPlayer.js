@@ -1,11 +1,12 @@
+import classNames from "classnames";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { IconContext } from "react-icons";
 import { BiPause, BiPlay, BiSkipNext, BiSkipPrevious } from "react-icons/bi";
 import { RiForward15Line, RiReplay15Line } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
 import { setVideoData } from "../../redux/videoStreamingSlice";
-import styles from "./VideoPlayer.module.css";
 import UploadVideo from "../UploadVideo/UploadVideo";
+import styles from "./VideoPlayer.module.css";
 
 export default function VideoPlayer() {
 	const { videos } = useSelector((store) => store.video);
@@ -18,6 +19,9 @@ export default function VideoPlayer() {
 	const [currentTimeSec, setCurrentTimeSec] = useState(0);
 	const [duration, setDuration] = useState([0, 0]);
 	const [durationSec, setDurationSec] = useState(0);
+
+	const [showPlaybackMenu, setShowPlaybackMenu] = useState(false);
+	const [playbackRate, setPlaybackRate] = useState(1);
 
 	const handlePlay = useCallback(() => {
 		if (isPlaying) {
@@ -85,6 +89,13 @@ export default function VideoPlayer() {
 	const handleSeekBackward = useCallback(() => {
 		videoRef.current.currentTime -= 15;
 	}, []);
+	const handleSettingsClick = useCallback(() => {
+		setShowPlaybackMenu((prev) => !prev);
+	}, []);
+
+	useEffect(() => {
+		videoRef.current.playbackRate = playbackRate;
+	}, [playbackRate]);
 
 	return (
 		<>
@@ -97,51 +108,78 @@ export default function VideoPlayer() {
 					<div className={styles.playerContainer}>
 						<video
 							ref={videoRef}
+							defaultPlaybackRate={1}
 							width="70%"
 							height="70%"
 							className={styles.videoPlayer}
 							src={currentVideo.url}
 						></video>
-						<div className={styles.videoInfo}>
-							<div className={styles.controls}>
-								<IconContext.Provider value={{ color: "white", size: "2em" }}>
-									<BiSkipPrevious />
-								</IconContext.Provider>
-								<button
-									className={styles.controlButton}
-									onClick={handleSeekBackward}
-								>
-									<RiReplay15Line />
-								</button>
-								{isPlaying ? (
-									<button className={styles.controlButton} onClick={handlePlay}>
-										<IconContext.Provider
-											value={{ color: "white", size: "2em" }}
-										>
-											<BiPause />
-										</IconContext.Provider>
+						<div className={classNames(styles.videoInfo, "bg-slate-700")}>
+							<div className="flex items-center">
+								<div className={styles.controls}>
+									<IconContext.Provider value={{ color: "white", size: "2em" }}>
+										<BiSkipPrevious />
+									</IconContext.Provider>
+									<button
+										className={styles.controlButton}
+										onClick={handleSeekBackward}
+									>
+										<RiReplay15Line />
 									</button>
-								) : (
-									<button className={styles.controlButton} onClick={handlePlay}>
-										<IconContext.Provider
-											value={{ color: "white", size: "2em" }}
+									{isPlaying ? (
+										<button
+											className={styles.controlButton}
+											onClick={handlePlay}
 										>
-											<BiPlay />
-										</IconContext.Provider>
+											<IconContext.Provider
+												value={{ color: "white", size: "2em" }}
+											>
+												<BiPause />
+											</IconContext.Provider>
+										</button>
+									) : (
+										<button
+											className={styles.controlButton}
+											onClick={handlePlay}
+										>
+											<IconContext.Provider
+												value={{ color: "white", size: "2em" }}
+											>
+												<BiPlay />
+											</IconContext.Provider>
+										</button>
+									)}
+									<button
+										className={styles.controlButton}
+										onClick={handleSeekForward}
+									>
+										<RiForward15Line />
 									</button>
-								)}
-								<button
-									className={styles.controlButton}
-									onClick={handleSeekForward}
-								>
-									<RiForward15Line />
-								</button>
-								<IconContext.Provider value={{ color: "white", size: "2em" }}>
-									<BiSkipNext />
-								</IconContext.Provider>
+									<IconContext.Provider value={{ color: "white", size: "2em" }}>
+										<BiSkipNext />
+									</IconContext.Provider>
+								</div>
+								<div className={styles.duration}>
+									{currentTime[0]}:{currentTime[1]} / {duration[0]}:
+									{duration[1]}
+								</div>
 							</div>
-							<div className={styles.duration}>
-								{currentTime[0]}:{currentTime[1]} / {duration[0]}:{duration[1]}
+							<div className="flex relative">
+								<button onClick={handleSettingsClick}>x{playbackRate}</button>
+
+								{showPlaybackMenu ? (
+									<div className="absolute bg-slate-500 p-2 w-40 bottom-8 right-2 flex items-center justify-between">
+										<button onClick={() => setPlaybackRate(0.25)}>0.25</button>
+										<span className="border-2 border-cyan-50 h-6"></span>
+										<button onClick={() => setPlaybackRate(0.5)}>0.5</button>
+										<span className="border-2 border-cyan-50 h-6"></span>
+										<button onClick={() => setPlaybackRate(1)}>1</button>
+										<span className="border-2 border-cyan-50 h-6"></span>
+										<button onClick={() => setPlaybackRate(1.5)}>1.5</button>
+										<span className="border-2 border-cyan-50 h-6"></span>
+										<button onClick={() => setPlaybackRate(2.0)}>2</button>
+									</div>
+								) : null}
 							</div>
 						</div>
 						<input

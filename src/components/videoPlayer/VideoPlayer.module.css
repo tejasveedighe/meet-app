@@ -17,7 +17,10 @@
 }
 
 .videoInfo {
+	width: inherit;
 	display: flex;
+	align-items: center;
+	justify-content: space-between;
 	margin-top: -3.5em;
 	color: white;
 }
