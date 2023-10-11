@@ -9,6 +9,10 @@ import UploadVideo from "../UploadVideo/UploadVideo";
 import styles from "./VideoPlayer.module.css";
 import VideoDetails from "./components/VideoDetails";
 import VideoLists from "./components/VideoLists";
+import VideoRange from "./components/VideoRange";
+import VideoTime from "./components/VideoTime";
+import VideoPlaybackControl from "./components/VideoPlaybackControl";
+import VideoSeekControls from "./components/VideoSeekControls";
 
 export default function VideoPlayer() {
 	const { videos } = useSelector((store) => store.video);
@@ -131,79 +135,24 @@ export default function VideoPlayer() {
 						></video>
 						<div className={classNames(styles.videoInfo, "bg-slate-700")}>
 							<div className="flex items-center">
-								<div className={styles.controls}>
-									<IconContext.Provider value={{ color: "white", size: "2em" }}>
-										<BiSkipPrevious />
-									</IconContext.Provider>
-									<button
-										className={styles.controlButton}
-										onClick={() => handleSeek(-15)}
-									>
-										<RiReplay15Line />
-									</button>
-									{isPlaying ? (
-										<button
-											className={styles.controlButton}
-											onClick={handlePlay}
-										>
-											<IconContext.Provider
-												value={{ color: "white", size: "2em" }}
-											>
-												<BiPause />
-											</IconContext.Provider>
-										</button>
-									) : (
-										<button
-											className={styles.controlButton}
-											onClick={handlePlay}
-										>
-											<IconContext.Provider
-												value={{ color: "white", size: "2em" }}
-											>
-												<BiPlay />
-											</IconContext.Provider>
-										</button>
-									)}
-									<button
-										className={styles.controlButton}
-										onClick={() => handleSeek(15)}
-									>
-										<RiForward15Line />
-									</button>
-									<IconContext.Provider value={{ color: "white", size: "2em" }}>
-										<BiSkipNext />
-									</IconContext.Provider>
-								</div>
-								<div className={styles.duration}>
-									{currentTime[0]}:{currentTime[1]} / {duration[0]}:
-									{duration[1]}
-								</div>
+								<VideoSeekControls
+									handlePlay={handlePlay}
+									handleSeek={handleSeek}
+									isPlaying={isPlaying}
+								/>
+								<VideoTime currentTime={currentTime} duration={duration} />
 							</div>
-							<div className="flex relative">
-								<button onClick={handleSettingsClick}>x{playbackRate}</button>
-
-								{showPlaybackMenu ? (
-									<div className="absolute bg-slate-500 p-2 w-40 bottom-8 right-2 flex items-center justify-between">
-										<button onClick={() => setPlaybackRate(0.25)}>0.25</button>
-										<span className="border-2 border-cyan-50 h-6"></span>
-										<button onClick={() => setPlaybackRate(0.5)}>0.5</button>
-										<span className="border-2 border-cyan-50 h-6"></span>
-										<button onClick={() => setPlaybackRate(1)}>1</button>
-										<span className="border-2 border-cyan-50 h-6"></span>
-										<button onClick={() => setPlaybackRate(1.5)}>1.5</button>
-										<span className="border-2 border-cyan-50 h-6"></span>
-										<button onClick={() => setPlaybackRate(2.0)}>2</button>
-									</div>
-								) : null}
-							</div>
+							<VideoPlaybackControl
+								handleSettingsClick={handleSettingsClick}
+								playbackRate={playbackRate}
+								setPlaybackRate={setPlaybackRate}
+								showPlaybackMenu={showPlaybackMenu}
+							/>
 						</div>
-						<input
-							type="range"
-							min={0}
-							max={durationSec}
-							defaultValue={0}
-							value={currentTimeSec}
-							onChange={handleChangeTime}
+						<VideoRange
+							durationSec={durationSec}
+							currentTimeSec={currentTimeSec}
+							handleChangeTime={handleChangeTime}
 						/>
 					</div>
 					<VideoLists videos={videos} handleChangeVideo={handleChangeVideo} />

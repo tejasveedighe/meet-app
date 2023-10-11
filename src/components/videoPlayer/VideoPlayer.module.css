@@ -12,7 +12,6 @@
 }
 
 .videoInfo {
-	z-index: 2;
 	width: 100%;
 	display: flex;
 	align-items: center;
@@ -49,4 +48,8 @@
 	padding: 10px;
 	list-style-type: disc;
 	border: 1px solid;
+}
+
+.videoRange {
+	z-index: 1;
 }
