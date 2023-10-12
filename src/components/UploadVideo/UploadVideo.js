@@ -3,33 +3,30 @@ import React, { useCallback, useState } from "react";
 
 export default function UploadVideo() {
 	const [file, setFile] = useState(null);
-	const [uploading, setUploading] = useState(false);
+	const [isUploading, setIsUploading] = useState(false);
+	const [uploaded, setUploaded] = useState(false);
 	const handleFileChange = useCallback((e) => {
-		// if (file?.type !== "video/mp4") alert("Please upload a video file");
 		setFile(e.target.files[0]);
 	}, []);
 	const handleSubmit = useCallback(
 		async (e) => {
 			e.preventDefault();
-			setUploading(true);
+			setIsUploading(true);
 
-			// if (file?.type !== "video/mp4") alert("Please upload a video file");
-			// else {
 			const formData = new FormData();
-			formData.append("video_file", file);
+			formData.append("video", file);
 			try {
 				const res = await axios.post(
-					"http://localhost:8000/api/post-video",
+					"http://localhost:8000/api/postvideo",
 					formData
 				);
-
-				setTimeout(() => {
-					setUploading(false);
-				}, 2000);
+				if (res.status === 200) {
+					setIsUploading(false);
+					setUploaded(true);
+				}
 			} catch (error) {
 				console.error(error);
 			}
-			// }
 		},
 		[file]
 	);
@@ -59,11 +56,17 @@ export default function UploadVideo() {
 			<form onSubmit={handleSubmit}>
 				<input accept="video/mp4" type="file" onChange={handleFileChange} />
 				<button
-					disabled={uploading}
+					disabled={isUploading || uploaded}
 					className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
 					type="submit"
 				>
-					{uploading ? <p>uploading...</p> : <p>Upload Video!</p>}
+					{uploaded ? (
+						<p>Uploaded!</p>
+					) : isUploading ? (
+						<p>uploading...</p>
+					) : (
+						<p>Upload Video!</p>
+					)}
 				</button>
 				{fileData()}
 			</form>

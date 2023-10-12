@@ -10,6 +10,7 @@ import VideoPlaybackControl from "./components/VideoPlaybackControl";
 import VideoRange from "./components/VideoRange";
 import VideoSeekControls from "./components/VideoSeekControls";
 import VideoTime from "./components/VideoTime";
+import { AiOutlineExpand } from "react-icons/ai";
 
 export default function VideoPlayer() {
 	const { videos } = useSelector((store) => store.video);
@@ -113,6 +114,18 @@ export default function VideoPlayer() {
 		return () => document.removeEventListener("mousedown", handleVideoClick);
 	}, [handleVideoClick]);
 
+	const handleFullScreen = useCallback(() => {
+		if (videoRef.current.requestFullscreen) {
+			videoRef.current.requestFullscreen();
+		} else if (videoRef.current.webkitRequestFullscreen) {
+			/* Safari */
+			videoRef.current.webkitRequestFullscreen();
+		} else if (videoRef.current.msRequestFullscreen) {
+			/* IE11 */
+			videoRef.current.msRequestFullscreen();
+		}
+	}, []);
+
 	return (
 		<>
 			<div className="content-center justify-center flex-col">
@@ -125,6 +138,7 @@ export default function VideoPlayer() {
 						<video
 							ref={videoRef}
 							defaultPlaybackRate={1}
+							fullscreen
 							width="1270"
 							height="720"
 							className={styles.videoPlayer}
@@ -139,12 +153,17 @@ export default function VideoPlayer() {
 								/>
 								<VideoTime currentTime={currentTime} duration={duration} />
 							</div>
-							<VideoPlaybackControl
-								handleSettingsClick={handleSettingsClick}
-								playbackRate={playbackRate}
-								setPlaybackRate={setPlaybackRate}
-								showPlaybackMenu={showPlaybackMenu}
-							/>
+							<div className="flex items-center gap-4 mr-4">
+								<VideoPlaybackControl
+									handleSettingsClick={handleSettingsClick}
+									playbackRate={playbackRate}
+									setPlaybackRate={setPlaybackRate}
+									showPlaybackMenu={showPlaybackMenu}
+								/>
+								<button onClick={handleFullScreen}>
+									<AiOutlineExpand />
+								</button>
+							</div>
 						</div>
 						<VideoRange
 							durationSec={durationSec}
