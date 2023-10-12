@@ -1,5 +1,6 @@
 import classNames from "classnames";
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import { AiOutlineExpand } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { setVideoData } from "../../redux/videoStreamingSlice";
 import UploadVideo from "../UploadVideo/UploadVideo";
@@ -10,7 +11,6 @@ import VideoPlaybackControl from "./components/VideoPlaybackControl";
 import VideoRange from "./components/VideoRange";
 import VideoSeekControls from "./components/VideoSeekControls";
 import VideoTime from "./components/VideoTime";
-import { AiOutlineExpand } from "react-icons/ai";
 
 export default function VideoPlayer() {
 	const { videos } = useSelector((store) => store.video);

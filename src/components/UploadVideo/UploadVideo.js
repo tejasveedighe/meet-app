@@ -1,16 +1,31 @@
 import axios from "axios";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import { ColorRing } from "react-loader-spinner";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function UploadVideo() {
-	const [file, setFile] = useState(null);
 	const [isUploading, setIsUploading] = useState(false);
 	const [uploaded, setUploaded] = useState(false);
-	const handleFileChange = useCallback((e) => {
-		setFile(e.target.files[0]);
+
+	const notify = useCallback((type, fileName) => {
+		if (type === "error") {
+			toast.error(`${fileName} Upload Failed`, {
+				position: toast.POSITION.TOP_RIGHT,
+			});
+		} else
+			toast.success(`${fileName} Video Uploaded!`, {
+				position: toast.POSITION.TOP_RIGHT,
+			});
 	}, []);
+	const [uploadQueue, setUploadQueue] = useState([]);
+
+	const handleFileChange = useCallback((e) => {
+		setUploadQueue((prev) => [...prev, e.target.files[0]]);
+	}, []);
+
 	const handleSubmit = useCallback(
-		async (e) => {
-			e.preventDefault();
+		async (file) => {
 			setIsUploading(true);
 
 			const formData = new FormData();
@@ -21,25 +36,31 @@ export default function UploadVideo() {
 					formData
 				);
 				if (res.status === 200) {
-					setIsUploading(false);
-					setUploaded(true);
+					notify("success", file.name);
+				} else {
+					notify("error", file.name);
 				}
+				setUploaded(true);
+				setIsUploading(false);
 			} catch (error) {
 				console.error(error);
 			}
 		},
-		[file]
+		[notify]
 	);
+	useEffect(() => {
+		if (uploadQueue.length) {
+			let removed = uploadQueue.pop();
+			handleSubmit(removed);
+		}
+	}, [handleSubmit, notify, uploadQueue]);
+
 	const fileData = useCallback(() => {
-		if (file) {
+		if (uploadQueue) {
 			return (
 				<div>
-					<h2>File Details:</h2>
-					<p>File Name: {file.name}</p>
-
-					<p>File Type: {file.type}</p>
-
-					<p>Last Modified: {file.lastModifiedDate.toDateString()}</p>
+					<h2>Files In Queue:</h2>
+					<p>Number of Files: {uploadQueue.length}</p>
 				</div>
 			);
 		} else {
@@ -50,26 +71,36 @@ export default function UploadVideo() {
 				</div>
 			);
 		}
-	}, [file]);
+	}, [uploadQueue]);
+
 	return (
 		<div className="mt-3 flex items-center justify-center">
-			<form onSubmit={handleSubmit}>
-				<input accept="video/mp4" type="file" onChange={handleFileChange} />
-				<button
-					disabled={isUploading || uploaded}
-					className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-					type="submit"
-				>
-					{uploaded ? (
-						<p>Uploaded!</p>
-					) : isUploading ? (
-						<p>uploading...</p>
-					) : (
-						<p>Upload Video!</p>
-					)}
-				</button>
-				{fileData()}
-			</form>
+			<input accept="video/mp4" type="file" onChange={handleFileChange} />
+			<button
+				disabled={isUploading || uploaded}
+				className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+			>
+				{uploaded ? (
+					<p>Uploaded!</p>
+				) : isUploading ? (
+					<p>uploading...</p>
+				) : (
+					<p>Upload Video!</p>
+				)}
+			</button>
+			{fileData()}
+			{uploadQueue.length ? (
+				<ColorRing
+					visible={true}
+					height="80"
+					width="80"
+					ariaLabel="blocks-loading"
+					wrapperStyle={{}}
+					wrapperClass="blocks-wrapper"
+					colors={["#e15b64", "#f47e60", "#f8b26a", "#abbd81", "#849b87"]}
+				/>
+			) : null}
+			<ToastContainer />
 		</div>
 	);
 }
