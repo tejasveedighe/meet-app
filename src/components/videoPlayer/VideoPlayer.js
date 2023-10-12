@@ -1,18 +1,15 @@
 import classNames from "classnames";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { IconContext } from "react-icons";
-import { BiPause, BiPlay, BiSkipNext, BiSkipPrevious } from "react-icons/bi";
-import { RiForward15Line, RiReplay15Line } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
 import { setVideoData } from "../../redux/videoStreamingSlice";
 import UploadVideo from "../UploadVideo/UploadVideo";
 import styles from "./VideoPlayer.module.css";
 import VideoDetails from "./components/VideoDetails";
 import VideoLists from "./components/VideoLists";
-import VideoRange from "./components/VideoRange";
-import VideoTime from "./components/VideoTime";
 import VideoPlaybackControl from "./components/VideoPlaybackControl";
+import VideoRange from "./components/VideoRange";
 import VideoSeekControls from "./components/VideoSeekControls";
+import VideoTime from "./components/VideoTime";
 
 export default function VideoPlayer() {
 	const { videos } = useSelector((store) => store.video);

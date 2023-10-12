@@ -9,6 +9,7 @@
 	flex-direction: column;
 	margin-top: 10px;
 	overflow: hidden;
+	position: relative;
 }
 
 .videoInfo {
@@ -18,6 +19,7 @@
 	justify-content: space-between;
 	margin-top: -3.5em;
 	color: white;
+	z-index: 2;
 }
 
 .controls {
@@ -52,4 +54,25 @@
 
 .videoRange {
 	z-index: 1;
+}
+
+.playbackMenu {
+	position: absolute;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	background-color: slategray;
+	padding: 10px;
+	bottom: 50px;
+	right: 10px;
+	width: 160px;
+}
+
+.border {
+	border: 2px solid white;
+	height: 24px;
+}
+
+.playbackMenuButton {
+	margin-right: 10px;
 }
