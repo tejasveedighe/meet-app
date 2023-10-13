@@ -13,6 +13,7 @@ import VideoSeekControls from "./components/VideoSeekControls";
 import VideoTime from "./components/VideoTime";
 
 export default function VideoPlayer() {
+	const dispatch = useDispatch();
 	const { videos } = useSelector((store) => store.video);
 	const [currentVideo, setCurrentVideo] = useState(videos[0]);
 
@@ -57,13 +58,12 @@ export default function VideoPlayer() {
 			setCurrentTime([min, sec]);
 		}, 1000);
 		return () => clearInterval(interval);
-	}, [currentTime, isPlaying, sec2Min]);
+	}, [currentTime, currentVideo, dispatch, isPlaying, sec2Min]);
 
 	const handleChangeTime = useCallback((e) => {
 		videoRef.current.currentTime = e.target.value;
 	}, []);
 
-	const dispatch = useDispatch();
 	const handleChangeVideo = useCallback(
 		(id) => {
 			videoRef.current.pause();
@@ -86,6 +86,10 @@ export default function VideoPlayer() {
 		},
 		[currentVideo, dispatch, sec2Min, videos]
 	);
+	useEffect(() => {
+		setCurrentTime(currentVideo.progress.time);
+		setCurrentTimeSec(currentVideo.progress.sec);
+	}, [currentVideo]);
 
 	const handleSeek = useCallback((val) => {
 		videoRef.current.currentTime += val;
@@ -125,6 +129,20 @@ export default function VideoPlayer() {
 			videoRef.current.msRequestFullscreen();
 		}
 	}, []);
+
+	useEffect(() => {
+		if (currentVideo.progress.sec !== videoRef.current.currentTime) {
+			const { min, sec } = sec2Min(videoRef.current.currentTime);
+			const _video = {
+				...currentVideo,
+				progress: {
+					time: [min, sec],
+					sec: sec,
+				},
+			};
+			dispatch(setVideoData(_video));
+		}
+	}, [currentVideo, dispatch, sec2Min]);
 
 	return (
 		<>

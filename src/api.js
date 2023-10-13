@@ -1,7 +1,4 @@
 import axios from "axios";
-//Auth token we will use to generate a meeting and connect to it
-export const authToken = process.env.REACT_APP_VIDEO_SDK_TOKEN;
-
 // API call to create meeting
 export const createMeeting = async ({ token }) => {
 	try {

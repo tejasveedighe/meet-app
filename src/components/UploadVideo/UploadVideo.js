@@ -48,6 +48,7 @@ export default function UploadVideo() {
 		},
 		[notify]
 	);
+
 	useEffect(() => {
 		if (uploadQueue.length) {
 			let removed = uploadQueue.pop();
